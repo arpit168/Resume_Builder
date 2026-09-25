@@ -5,6 +5,9 @@ export function Footer() {
         <div className="text-sm text-gray-500 dark:text-gray-400">
           © {new Date().getFullYear()} HireCraft. All rights reserved.
         </div>
+         <div className="text-sm text-gray-500 dark:text-gray-400">
+          © {new Date().getFullYear()} Made with ❤️ by Arpit
+        </div>
       </div>
     </footer>
   );
