@@ -259,10 +259,7 @@ export function ElegantTemplate({
           {data.personalInfo.portfolio && (
             <div className="mt-4 flex flex-col items-end">
               <span className="font-bold text-gray-900 mb-1">Portfolio</span>
-              <a
-                href={data.personalInfo.portfolio}
-                target="_blank"
-                rel="noreferrer"
+              <div
                 className="bg-white p-1 rounded shadow-sm border border-gray-100"
               >
                 <a
@@ -281,7 +278,7 @@ export function ElegantTemplate({
                     level="L"
                   />
                 </a>
-              </a>
+              </div>
             </div>
           )}
         </div>

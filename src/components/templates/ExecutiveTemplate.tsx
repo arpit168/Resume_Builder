@@ -107,10 +107,7 @@ export function ExecutiveTemplate({
 
         {data.personalInfo.portfolio && (
           <div className="absolute top-8 right-10 flex flex-col items-center">
-            <a
-              href={data.personalInfo.portfolio}
-              target="_blank"
-              rel="noreferrer"
+            <div
               className="bg-white p-1 rounded shadow-sm border border-gray-200"
             >
               <a
@@ -129,7 +126,7 @@ export function ExecutiveTemplate({
                   level="L"
                 />
               </a>
-            </a>
+            </div>
           </div>
         )}
       </div>

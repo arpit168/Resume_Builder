@@ -105,10 +105,7 @@ export function MinimalTemplate({
 
         {data.personalInfo.portfolio && (
           <div className="absolute top-12 right-12 flex flex-col items-end">
-            <a
-              href={data.personalInfo.portfolio}
-              target="_blank"
-              rel="noreferrer"
+            <div
             >
               <a
                 href={
@@ -126,7 +123,7 @@ export function MinimalTemplate({
                   level="L"
                 />
               </a>
-            </a>
+            </div>
           </div>
         )}
       </header>

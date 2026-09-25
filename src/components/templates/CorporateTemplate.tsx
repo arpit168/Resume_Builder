@@ -119,10 +119,7 @@ export function CorporateTemplate({
         </div>
         {data.personalInfo.portfolio && (
           <div className="absolute top-8 right-8 flex flex-col items-center">
-            <a
-              href={data.personalInfo.portfolio}
-              target="_blank"
-              rel="noreferrer"
+            <div
               className="p-1 border border-gray-300 bg-white"
             >
               <a
@@ -141,7 +138,7 @@ export function CorporateTemplate({
                   level="L"
                 />
               </a>
-            </a>
+            </div>
           </div>
         )}
       </div>

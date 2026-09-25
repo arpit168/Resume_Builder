@@ -122,10 +122,7 @@ export function StandardTemplate({
       {/* Portfolio QR Code */}
       {data.personalInfo.portfolio && (
         <div className="flex flex-col items-end absolute top-12 right-12 text-center">
-          <a
-            href={data.personalInfo.portfolio}
-            target="_blank"
-            rel="noreferrer"
+          <div
           >
             <a
               href={
@@ -139,7 +136,7 @@ export function StandardTemplate({
             >
               <QRCode value={data.personalInfo.portfolio} size={64} level="L" />
             </a>
-          </a>
+          </div>
         </div>
       )}
 
