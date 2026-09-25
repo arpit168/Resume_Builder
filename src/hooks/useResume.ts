@@ -16,7 +16,9 @@ export function useResume(): ResumeState & { isHydrated: boolean } {
     return {
       isHydrated: false,
       resumes: [],
-      createResume: () => { throw new Error("Not hydrated"); },
+      createResume: () => {
+        throw new Error("Not hydrated");
+      },
       updateResume: () => {},
       deleteResume: () => {},
       duplicateResume: () => {},

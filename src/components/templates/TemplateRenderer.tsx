@@ -18,7 +18,9 @@ export function TemplateRenderer({ resume }: { resume: Resume }) {
     case "modern":
       return <ModernTemplate data={resume.data} theme={resume.colorTheme} />;
     case "professional":
-      return <ProfessionalTemplate data={resume.data} theme={resume.colorTheme} />;
+      return (
+        <ProfessionalTemplate data={resume.data} theme={resume.colorTheme} />
+      );
     case "minimal":
       return <MinimalTemplate data={resume.data} theme={resume.colorTheme} />;
     case "executive":
@@ -34,7 +36,9 @@ export function TemplateRenderer({ resume }: { resume: Resume }) {
     case "organic":
       return <OrganicTemplate data={resume.data} theme={resume.colorTheme} />;
     case "structured":
-      return <StructuredTemplate data={resume.data} theme={resume.colorTheme} />;
+      return (
+        <StructuredTemplate data={resume.data} theme={resume.colorTheme} />
+      );
     default:
       return <ModernTemplate data={resume.data} theme={resume.colorTheme} />;
   }

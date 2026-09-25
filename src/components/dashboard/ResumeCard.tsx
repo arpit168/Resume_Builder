@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { useResume } from "@/hooks/useResume";
 import { Resume } from "@/types/resume";
-import { FileText, Copy, Edit2, Trash2, MoreVertical, ExternalLink } from "lucide-react";
+import {
+  FileText,
+  Copy,
+  Edit2,
+  Trash2,
+  MoreVertical,
+  ExternalLink,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -38,7 +45,11 @@ export function ResumeCard({ resume }: { resume: Resume }) {
   const formatDate = (isoStr: string) => {
     try {
       const date = new Date(isoStr);
-      return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
+      return new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }).format(date);
     } catch {
       return "Unknown";
     }
@@ -46,11 +57,14 @@ export function ResumeCard({ resume }: { resume: Resume }) {
 
   return (
     <div className="group relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col h-[280px]">
-      <div className="p-6 flex-grow cursor-pointer" onClick={() => router.push(`/builder/${resume.id}`)}>
+      <div
+        className="p-6 flex-grow cursor-pointer"
+        onClick={() => router.push(`/builder/${resume.id}`)}
+      >
         <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-500 rounded-lg flex items-center justify-center mb-4">
           <FileText className="w-6 h-6" />
         </div>
-        
+
         {isEditing ? (
           <input
             type="text"
@@ -63,9 +77,11 @@ export function ResumeCard({ resume }: { resume: Resume }) {
             autoFocus
           />
         ) : (
-          <h3 className="text-lg font-semibold mb-1 line-clamp-1">{resume.name}</h3>
+          <h3 className="text-lg font-semibold mb-1 line-clamp-1">
+            {resume.name}
+          </h3>
         )}
-        
+
         <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
           Template: {resume.template}
         </p>
@@ -75,7 +91,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
         <div className="text-xs text-gray-500 dark:text-gray-400">
           Updated {formatDate(resume.updatedAt)}
         </div>
-        
+
         <div className="flex items-center gap-1">
           <Link
             href={`/builder/${resume.id}`}
@@ -85,7 +101,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
           >
             <ExternalLink className="w-4 h-4" />
           </Link>
-          
+
           <div className="relative">
             <button
               onClick={(e) => {
@@ -96,7 +112,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
             >
               <MoreVertical className="w-4 h-4" />
             </button>
-            
+
             {showMenu && (
               <>
                 <div
@@ -106,12 +122,15 @@ export function ResumeCard({ resume }: { resume: Resume }) {
                     setShowMenu(false);
                   }}
                 />
-                <div 
+                <div
                   className="absolute right-0 bottom-full mb-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
-                    onClick={() => { setIsEditing(true); setShowMenu(false); }}
+                    onClick={() => {
+                      setIsEditing(true);
+                      setShowMenu(false);
+                    }}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2"
                   >
                     <Edit2 className="w-4 h-4" /> Rename

@@ -19,14 +19,17 @@ export function SummaryForm({ resume }: { resume: Resume }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between border-b pb-2 border-gray-200 dark:border-gray-800 mb-4">
         <h2 className="text-xl font-bold">Professional Summary</h2>
-        <span className={`text-xs font-medium ${summary.length >= maxLength ? "text-red-500" : "text-gray-500"}`}>
+        <span
+          className={`text-xs font-medium ${summary.length >= maxLength ? "text-red-500" : "text-gray-500"}`}
+        >
           {summary.length} / {maxLength}
         </span>
       </div>
-      
+
       <div>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-          Write a short summary highlighting your most valuable skills, experiences, and accomplishments.
+          Write a short summary highlighting your most valuable skills,
+          experiences, and accomplishments.
         </p>
         <textarea
           value={summary}

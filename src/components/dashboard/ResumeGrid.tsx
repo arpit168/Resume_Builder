@@ -12,10 +12,14 @@ export function ResumeGrid() {
   const router = useRouter();
 
   if (!isHydrated) {
-    return <div className="animate-pulse flex space-x-4">Loading resumes...</div>;
+    return (
+      <div className="animate-pulse flex space-x-4">Loading resumes...</div>
+    );
   }
 
-  const filteredResumes = resumes.filter((r) => r.name.toLowerCase().includes(search.toLowerCase()));
+  const filteredResumes = resumes.filter((r) =>
+    r.name.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const handleCreate = () => {
     const newResume = createResume("Untitled Resume");
@@ -48,7 +52,9 @@ export function ResumeGrid() {
         <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-medium mb-2">No resumes found</h3>
           <p className="text-gray-500 dark:text-gray-400 mb-4">
-            {search ? "Try a different search term" : "Get started by creating your first resume."}
+            {search
+              ? "Try a different search term"
+              : "Get started by creating your first resume."}
           </p>
           {!search && (
             <button

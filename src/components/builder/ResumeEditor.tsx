@@ -19,15 +19,15 @@ export function ResumeEditor({ resume }: { resume: Resume }) {
       <ResumeProgress data={resume.data} />
       <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-10">
         <PersonalInfoForm resume={resume} />
-      <SummaryForm resume={resume} />
-      <ExperienceForm resume={resume} />
-      <EducationForm resume={resume} />
-      <SkillForm resume={resume} />
-      <ProjectForm resume={resume} />
-      <CertificationForm resume={resume} />
-      <LanguageForm resume={resume} />
-      <AchievementForm resume={resume} />
-      <CustomSectionForm resume={resume} />
+        <SummaryForm resume={resume} />
+        <ExperienceForm resume={resume} />
+        <EducationForm resume={resume} />
+        <SkillForm resume={resume} />
+        <ProjectForm resume={resume} />
+        <CertificationForm resume={resume} />
+        <LanguageForm resume={resume} />
+        <AchievementForm resume={resume} />
+        <CustomSectionForm resume={resume} />
       </div>
     </div>
   );

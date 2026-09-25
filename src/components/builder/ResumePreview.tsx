@@ -16,8 +16,8 @@ export function ResumePreview({ resume }: { resume: Resume }) {
     const updateScale = () => {
       if (containerRef.current) {
         const availableWidth = containerRef.current.clientWidth - 32;
-        const A4_WIDTH = 794; 
-        
+        const A4_WIDTH = 794;
+
         if (availableWidth > 0 && availableWidth < A4_WIDTH) {
           setScale(availableWidth / A4_WIDTH);
         } else if (availableWidth >= A4_WIDTH) {
@@ -39,7 +39,7 @@ export function ResumePreview({ resume }: { resume: Resume }) {
   useEffect(() => {
     if (!paperRef.current) return;
     const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         setPaperHeight(entry.contentRect.height);
       }
     });
@@ -48,22 +48,22 @@ export function ResumePreview({ resume }: { resume: Resume }) {
   }, [resume]); // Re-attach if needed, though ref is stable
 
   return (
-    <div 
+    <div
       id="resume-preview-container"
       ref={containerRef}
       className="h-full w-full overflow-y-auto overflow-x-hidden flex justify-center bg-[#F8FAFC] dark:bg-[#0B0F19] print:bg-white print:p-0 print:block"
     >
-      <div 
+      <div
         id="resume-preview-wrapper"
-        style={{ 
-          width: `${794 * scale}px`, 
+        style={{
+          width: `${794 * scale}px`,
           height: `${paperHeight * scale}px`,
           marginTop: "2rem",
-          marginBottom: "2rem"
+          marginBottom: "2rem",
         }}
         className="relative shrink-0"
       >
-        <div 
+        <div
           ref={paperRef}
           style={{
             width: "794px",
@@ -71,7 +71,7 @@ export function ResumePreview({ resume }: { resume: Resume }) {
             transform: `scale(${scale})`,
             transformOrigin: "top left",
           }}
-          className="absolute top-0 left-0 bg-white shadow-xl flex flex-col print:shadow-none print:transform-none print:w-auto print:min-h-0 print:m-0" 
+          className="absolute top-0 left-0 bg-white shadow-xl flex flex-col print:shadow-none print:transform-none print:w-auto print:min-h-0 print:m-0 text-gray-900"
           id="resume-preview-paper"
         >
           <TemplateRenderer resume={resume} />

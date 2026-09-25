@@ -2,7 +2,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #F8FAFC;
+  --background: #f8fafc;
   --foreground: #0f172a;
 }
 
@@ -14,7 +14,7 @@
 }
 
 .dark {
-  --background: #0B0F19;
+  --background: #0b0f19;
   --foreground: #f8fafc;
 }
 
@@ -29,8 +29,11 @@ body {
     margin: 0;
     size: A4 portrait;
   }
-  
-  :root, .dark, body, html {
+
+  :root,
+  .dark,
+  body,
+  html {
     --background: #ffffff !important;
     --foreground: #000000 !important;
     color-scheme: light !important;
@@ -85,4 +88,3 @@ body {
     page-break-after: avoid;
   }
 }
-
