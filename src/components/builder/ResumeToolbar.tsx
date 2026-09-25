@@ -2,10 +2,10 @@
 
 import { Resume, ResumeTemplate, ResumeTheme } from "@/types/resume";
 import { useResume } from "@/hooks/useResume";
-import { Printer, Download, Edit, Eye, Loader2, FileJson, Upload } from "lucide-react";
+import { Printer, Download, Edit, Eye, Loader2, FileJson, Upload, RotateCcw } from "lucide-react";
 import React, { useState, useRef } from "react";
 
-const TEMPLATES: ResumeTemplate[] = ["modern", "professional", "minimal", "executive"];
+const TEMPLATES: ResumeTemplate[] = ["modern", "professional", "minimal", "executive", "creative", "elegant", "corporate", "standard", "organic", "structured"];
 const THEMES: { id: ResumeTheme; color: string; name: string }[] = [
   { id: "blue", color: "bg-blue-600", name: "Blue" },
   { id: "green", color: "bg-green-600", name: "Green" },
@@ -23,7 +23,7 @@ export function ResumeToolbar({
   mobileView?: "edit" | "preview";
   setMobileView?: (view: "edit" | "preview") => void;
 }) {
-  const { updateResume } = useResume();
+  const { updateResume, clearResumeData } = useResume();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -137,7 +137,7 @@ export function ResumeToolbar({
         </div>
       )}
 
-      <div className="flex items-center gap-6 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
+      <div className="flex items-center gap-6 w-full sm:w-auto flex-wrap sm:pb-0">
         {/* Template Selector */}
         <div className="flex items-center gap-2 shrink-0">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden md:block">Template:</label>
@@ -152,27 +152,22 @@ export function ResumeToolbar({
           </select>
         </div>
 
-        {/* Theme Selector */}
-        <div className="flex items-center gap-2 shrink-0">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden md:block">Theme:</label>
-          <div className="flex gap-2">
-            {THEMES.map(theme => (
-              <button
-                key={theme.id}
-                onClick={() => handleThemeChange(theme.id)}
-                title={theme.name}
-                className={`w-6 h-6 rounded-full ${theme.color} border-2 transition-all ${
-                  resume.colorTheme === theme.id 
-                    ? "border-gray-900 dark:border-white scale-110" 
-                    : "border-transparent hover:scale-105"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
+
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-end sm:self-auto">
+        <button 
+          onClick={() => {
+            if(confirm("Are you sure you want to clear all data and start fresh?")) {
+              clearResumeData(resume.id);
+            }
+          }}
+          title="Start Fresh (Clear Data)"
+          className="flex items-center gap-1.5 text-sm px-2.5 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 transition-colors font-medium mr-1"
+        >
+          <RotateCcw className="w-4 h-4" /> <span className="hidden lg:inline">Start Fresh</span>
+        </button>
+        <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 hidden sm:block"></div>
         <input 
           type="file" 
           accept=".json" 

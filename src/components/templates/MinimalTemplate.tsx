@@ -1,6 +1,7 @@
 "use client";
 
 import { ResumeData, ResumeTheme } from "@/types/resume";
+import QRCode from "react-qr-code";
 
 const getThemeColors = (theme: ResumeTheme) => {
   switch (theme) {
@@ -26,7 +27,7 @@ export function MinimalTemplate({ data, theme }: { data: ResumeData; theme: Resu
   if (data.personalInfo.github) contactItems.push(data.personalInfo.github);
 
   return (
-    <div className="flex flex-col w-full min-h-full bg-white text-gray-800 font-sans p-12 max-w-4xl mx-auto leading-relaxed">
+    <div className="relative flex flex-col w-full min-h-full bg-white text-gray-800 font-sans p-12 max-w-4xl mx-auto leading-relaxed">
       {/* Header */}
       <header className="mb-10">
         <h1 className={`text-3xl font-light tracking-tight mb-1 ${accentColor}`}>
@@ -40,6 +41,17 @@ export function MinimalTemplate({ data, theme }: { data: ResumeData; theme: Resu
             <span key={index}>{item}</span>
           ))}
         </div>
+        
+        {data.personalInfo.portfolio && (
+          <div className="absolute top-12 right-12 flex flex-col items-end">
+            <a href={data.personalInfo.portfolio} target="_blank" rel="noreferrer">
+              <QRCode value={data.personalInfo.portfolio} size={64} level="L" />
+            </a>
+            <a href={data.personalInfo.portfolio} target="_blank" rel="noreferrer" className="text-[10px] text-gray-400 mt-1 hover:underline hover:text-gray-600 max-w-[80px] break-all text-right">
+              {data.personalInfo.portfolio.replace(/^https?:\/\//, '')}
+            </a>
+          </div>
+        )}
       </header>
 
       <div className="flex flex-col gap-10">
@@ -111,6 +123,60 @@ export function MinimalTemplate({ data, theme }: { data: ResumeData; theme: Resu
               ))}
             </div>
           </section>
+        )}
+
+        {data.certifications.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold tracking-widest text-gray-400 uppercase mb-4">Certifications</h3>
+            <div className="flex flex-col gap-4">
+              {data.certifications.map((cert) => (
+                <div key={cert.id} className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                  <div className="md:col-span-1 text-sm text-gray-400 mt-1">
+                    {cert.issueDate}
+                  </div>
+                  <div className="md:col-span-3">
+                    <h4 className={`text-base font-medium ${accentColor}`}>{cert.name}</h4>
+                    <p className="text-sm text-gray-600 mt-1">{cert.organization}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {data.achievements.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold tracking-widest text-gray-400 uppercase mb-4">Achievements</h3>
+            <div className="flex flex-col gap-4">
+              {data.achievements.map((ach) => (
+                <div key={ach.id} className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                  <div className="md:col-span-1 text-sm text-gray-400 mt-1">
+                    {ach.date}
+                  </div>
+                  <div className="md:col-span-3">
+                    <h4 className={`text-base font-medium ${accentColor}`}>{ach.title}</h4>
+                    <p className="text-sm text-gray-600 whitespace-pre-wrap mt-1">{ach.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {data.customSections.length > 0 && (
+          <div className="flex flex-col gap-10">
+            {data.customSections.map((section) => (
+              <section key={section.id}>
+                <h3 className="text-sm font-semibold tracking-widest text-gray-400 uppercase mb-4">{section.title}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                  <div className="md:col-span-1 text-sm text-gray-400 mt-1"></div>
+                  <div className="md:col-span-3">
+                    <p className="text-sm text-gray-600 whitespace-pre-wrap">{section.content}</p>
+                  </div>
+                </div>
+              </section>
+            ))}
+          </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

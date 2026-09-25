@@ -1,6 +1,7 @@
 "use client";
 
 import { ResumeData, ResumeTheme } from "@/types/resume";
+import QRCode from "react-qr-code";
 import { Mail, Phone, MapPin, Globe, Link } from "lucide-react";
 
 const getThemeColors = (theme: ResumeTheme) => {
@@ -110,6 +111,17 @@ export function ModernTemplate({ data, theme }: { data: ResumeData; theme: Resum
 
         {/* Sidebar Content (Right, 1/3) */}
         <div className="w-1/3 flex flex-col gap-6">
+          {data.personalInfo.portfolio && (
+            <section className="flex flex-col items-center mb-2">
+              <a href={data.personalInfo.portfolio} target="_blank" rel="noreferrer" className="bg-white p-1 rounded shadow-sm border border-gray-200">
+                <QRCode value={data.personalInfo.portfolio} size={80} level="L" />
+              </a>
+              <a href={data.personalInfo.portfolio} target="_blank" rel="noreferrer" className="text-xs text-gray-500 mt-2 hover:underline hover:text-blue-600 max-w-[120px] text-center break-all">
+                {data.personalInfo.portfolio.replace(/^https?:\/\//, '')}
+              </a>
+            </section>
+          )}
+
           {data.skills.length > 0 && (
             <section>
               <h3 className={`text-xl font-bold uppercase tracking-wider border-b-2 ${colors.border} pb-1 mb-3 ${colors.text}`}>Skills</h3>

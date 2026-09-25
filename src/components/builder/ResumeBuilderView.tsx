@@ -18,7 +18,7 @@ export function ResumeBuilderView({ resumeId }: { resumeId: string }) {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-950 overflow-hidden print:h-auto print:overflow-visible">
+    <div id="resume-builder-layout" className="flex flex-col h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-950 overflow-hidden print:h-auto print:overflow-visible">
       <ResumeToolbar resume={resume} mobileView={mobileView} setMobileView={setMobileView} />
       
       <div className="flex flex-1 overflow-hidden print:overflow-visible print:block">

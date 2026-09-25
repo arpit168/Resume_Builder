@@ -1,4 +1,4 @@
-export type ResumeTemplate = "modern" | "professional" | "minimal" | "executive";
+export type ResumeTemplate = "modern" | "professional" | "minimal" | "executive" | "creative" | "elegant" | "corporate" | "standard" | "organic" | "structured";
 export type ResumeTheme = "blue" | "green" | "purple" | "red" | "gray";
 
 export interface PersonalInfo {
@@ -11,6 +11,7 @@ export interface PersonalInfo {
   linkedin: string;
   github: string;
   photoUrl: string;
+  portfolio: string;
 }
 
 export interface Experience {

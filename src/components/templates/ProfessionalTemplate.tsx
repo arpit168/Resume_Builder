@@ -1,6 +1,7 @@
 "use client";
 
 import { ResumeData, ResumeTheme } from "@/types/resume";
+import QRCode from "react-qr-code";
 
 const getThemeColors = (theme: ResumeTheme) => {
   switch (theme) {
@@ -26,7 +27,7 @@ export function ProfessionalTemplate({ data, theme }: { data: ResumeData; theme:
   if (data.personalInfo.website) contactItems.push(data.personalInfo.website);
 
   return (
-    <div className="flex flex-col w-full min-h-full bg-white text-gray-900 font-serif p-10">
+    <div className="relative flex flex-col w-full min-h-full bg-white text-gray-900 font-serif p-10">
       {/* Header */}
       <div className="text-center mb-6">
         <h1 className={`text-4xl font-bold uppercase mb-2 ${colors.text}`}>{data.personalInfo.fullName || "Your Name"}</h1>
@@ -41,6 +42,17 @@ export function ProfessionalTemplate({ data, theme }: { data: ResumeData; theme:
             </span>
           ))}
         </div>
+        
+        {data.personalInfo.portfolio && (
+          <div className="absolute top-10 right-10 flex flex-col items-end">
+            <a href={data.personalInfo.portfolio} target="_blank" rel="noreferrer" className="bg-white p-1 rounded border border-gray-200">
+              <QRCode value={data.personalInfo.portfolio} size={64} level="L" />
+            </a>
+            <a href={data.personalInfo.portfolio} target="_blank" rel="noreferrer" className="text-[10px] text-gray-500 mt-1 hover:underline hover:text-blue-600 max-w-[80px] break-all text-right">
+              {data.personalInfo.portfolio.replace(/^https?:\/\//, '')}
+            </a>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-6">
@@ -133,6 +145,33 @@ export function ProfessionalTemplate({ data, theme }: { data: ResumeData; theme:
               ))}
             </ul>
           </section>
+        )}
+
+        {data.achievements.length > 0 && (
+          <section>
+            <h3 className={`text-lg font-bold uppercase border-b-2 ${colors.border} pb-1 mb-3 ${colors.text}`}>Achievements</h3>
+            <ul className="list-disc list-inside text-sm flex flex-col gap-2">
+              {data.achievements.map((ach) => (
+                <li key={ach.id}>
+                  <span className="font-semibold">{ach.title}</span> {ach.date && <span className="text-gray-600">({ach.date})</span>}
+                  {ach.description && <div className="ml-5 text-gray-800 whitespace-pre-wrap">{ach.description}</div>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {data.customSections.length > 0 && (
+          <div className="flex flex-col gap-6">
+            {data.customSections.map((section) => (
+              <section key={section.id}>
+                <h3 className={`text-lg font-bold uppercase border-b-2 ${colors.border} pb-1 mb-3 ${colors.text}`}>{section.title}</h3>
+                <div className="text-sm text-gray-800 whitespace-pre-wrap">
+                  {section.content}
+                </div>
+              </section>
+            ))}
+          </div>
         )}
       </div>
     </div>

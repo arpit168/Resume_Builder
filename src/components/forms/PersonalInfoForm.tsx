@@ -48,44 +48,46 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
       <div>
         <h2 className="text-xl font-bold mb-4 border-b pb-2 border-gray-200 dark:border-gray-800">Personal Information</h2>
         
-        <div className="mb-6 flex items-start gap-6">
-          <div className="relative">
-            {data.photoUrl ? (
-              <div className="w-24 h-24 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 relative group">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={data.photoUrl} alt="Profile" className="w-full h-full object-cover" />
-                <button
-                  onClick={removePhoto}
-                  className="absolute inset-0 bg-black/50 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Remove photo"
+        {["creative", "elegant", "organic", "structured"].includes(resume.template) && (
+          <div className="mb-6 flex items-start gap-6">
+            <div className="relative">
+              {data.photoUrl ? (
+                <div className="w-24 h-24 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 relative group">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={data.photoUrl} alt="Profile" className="w-full h-full object-cover" />
+                  <button
+                    onClick={removePhoto}
+                    className="absolute inset-0 bg-black/50 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Remove photo"
+                  >
+                    <X className="w-6 h-6 mb-1" />
+                    <span className="text-xs">Remove</span>
+                  </button>
+                </div>
+              ) : (
+                <div 
+                  className="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                  onClick={() => fileInputRef.current?.click()}
                 >
-                  <X className="w-6 h-6 mb-1" />
-                  <span className="text-xs">Remove</span>
-                </button>
-              </div>
-            ) : (
-              <div 
-                className="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <User className="w-8 h-8 mb-1 text-gray-400" />
-                <span className="text-xs font-medium">Add Photo</span>
-              </div>
-            )}
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              onChange={handlePhotoUpload} 
-              accept="image/*" 
-              className="hidden" 
-            />
+                  <User className="w-8 h-8 mb-1 text-gray-400" />
+                  <span className="text-xs font-medium">Add Photo</span>
+                </div>
+              )}
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handlePhotoUpload} 
+                accept="image/*" 
+                className="hidden" 
+              />
+            </div>
+            <div className="flex-1 text-sm text-gray-500 dark:text-gray-400">
+              <p className="font-medium text-gray-700 dark:text-gray-300 mb-1">Profile Photo</p>
+              <p>Add a professional headshot. Recommended size: 400x400px.</p>
+              <p>Maximum file size: 2MB.</p>
+            </div>
           </div>
-          <div className="flex-1 text-sm text-gray-500 dark:text-gray-400">
-            <p className="font-medium text-gray-700 dark:text-gray-300 mb-1">Profile Photo</p>
-            <p>Add a professional headshot. Recommended size: 400x400px.</p>
-            <p>Maximum file size: 2MB.</p>
-          </div>
-        </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -170,9 +172,20 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
             <input
               type="text"
               name="github"
-              value={data.github}
+              value={data.github || ""}
               onChange={handleChange}
               placeholder="github.com/johndoe"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Portfolio URL (For QR)</label>
+            <input
+              type="url"
+              name="portfolio"
+              value={data.portfolio || ""}
+              onChange={handleChange}
+              placeholder="https://johndoe.dev"
               className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

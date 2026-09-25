@@ -1,6 +1,7 @@
 "use client";
 
 import { ResumeData, ResumeTheme } from "@/types/resume";
+import QRCode from "react-qr-code";
 
 const getThemeColors = (theme: ResumeTheme) => {
   switch (theme) {
@@ -24,7 +25,7 @@ export function ExecutiveTemplate({ data, theme }: { data: ResumeData; theme: Re
   if (data.personalInfo.linkedin) contactItems.push(data.personalInfo.linkedin);
 
   return (
-    <div className="flex flex-col w-full min-h-full bg-white text-gray-900 font-serif">
+    <div className="relative flex flex-col w-full min-h-full bg-white text-gray-900 font-serif">
       {/* Heavy Header */}
       <div className={`p-10 ${colors.bg} text-white flex flex-col items-center text-center`}>
         <h1 className="text-4xl font-extrabold tracking-widest uppercase mb-2">{data.personalInfo.fullName || "Your Name"}</h1>
@@ -34,6 +35,17 @@ export function ExecutiveTemplate({ data, theme }: { data: ResumeData; theme: Re
             <span key={i}>{item}</span>
           ))}
         </div>
+        
+        {data.personalInfo.portfolio && (
+          <div className="absolute top-8 right-10 flex flex-col items-center">
+            <a href={data.personalInfo.portfolio} target="_blank" rel="noreferrer" className="bg-white p-1 rounded shadow-sm border border-gray-200">
+              <QRCode value={data.personalInfo.portfolio} size={64} level="L" />
+            </a>
+            <a href={data.personalInfo.portfolio} target="_blank" rel="noreferrer" className="text-[9px] text-white/80 mt-1 hover:underline hover:text-white max-w-[80px] break-all text-center leading-tight">
+              {data.personalInfo.portfolio.replace(/^https?:\/\//, '')}
+            </a>
+          </div>
+        )}
       </div>
 
       <div className="p-10 flex flex-col gap-8">
@@ -148,6 +160,20 @@ export function ExecutiveTemplate({ data, theme }: { data: ResumeData; theme: Re
                     <div key={cert.id}>
                       <h4 className="font-bold text-gray-900 leading-snug">{cert.name}</h4>
                       <div className="text-sm text-gray-600 mt-1">{cert.organization}</div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {data.languages.length > 0 && (
+              <section>
+                <h3 className={`text-xl font-bold uppercase tracking-wider mb-4 border-b-2 ${colors.border} pb-2 ${colors.primary}`}>Languages</h3>
+                <div className="flex flex-col gap-2">
+                  {data.languages.map((lang) => (
+                    <div key={lang.id} className="flex flex-col">
+                      <span className="font-bold text-gray-900 leading-snug">{lang.name}</span>
+                      {lang.proficiency && <span className="text-sm text-gray-600">{lang.proficiency}</span>}
                     </div>
                   ))}
                 </div>

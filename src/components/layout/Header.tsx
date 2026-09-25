@@ -21,16 +21,7 @@ export function Header() {
           <FileText className="w-6 h-6 text-blue-500" />
           <span>HireCraft</span>
         </Link>
-        
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-500 dark:text-gray-400">
-          <Link href="/" className="text-gray-900 dark:text-white relative py-2">
-            Home
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full"></span>
-          </Link>
-          <Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors py-2">Templates</Link>
-          <Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors py-2">Features</Link>
-          <Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors py-2">About</Link>
-        </nav>
+
 
         <div className="flex items-center gap-4">
           {mounted && (

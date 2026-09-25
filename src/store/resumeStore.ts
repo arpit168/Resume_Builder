@@ -14,7 +14,20 @@ import {
   ResumeTemplate,
 } from "../types/resume";
 
-const initialPersonalInfo: PersonalInfo = {
+const dummyPersonalInfo: PersonalInfo = {
+  fullName: "John Doe",
+  jobTitle: "Senior Software Engineer",
+  email: "john.doe@example.com",
+  phone: "+1 234 567 8900",
+  location: "New York, USA",
+  website: "johndoe.dev",
+  linkedin: "linkedin.com/in/johndoe",
+  github: "github.com/johndoe",
+  photoUrl: "",
+  portfolio: "https://johndoe.dev",
+};
+
+const blankPersonalInfo: PersonalInfo = {
   fullName: "",
   jobTitle: "",
   email: "",
@@ -24,6 +37,7 @@ const initialPersonalInfo: PersonalInfo = {
   linkedin: "",
   github: "",
   photoUrl: "",
+  portfolio: "",
 };
 
 const createEmptyResume = (id: string, name: string): Resume => ({
@@ -32,16 +46,65 @@ const createEmptyResume = (id: string, name: string): Resume => ({
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   template: "modern",
-  colorTheme: "blue",
+  colorTheme: "gray",
   data: {
-    personalInfo: initialPersonalInfo,
-    summary: "",
-    experience: [],
-    education: [],
-    skills: [],
-    projects: [],
+    personalInfo: dummyPersonalInfo,
+    summary: "Passionate and results-driven Software Engineer with over 5 years of experience in building scalable web applications. Adept at collaborating with cross-functional teams to deliver high-quality software solutions. Strong expertise in modern JavaScript frameworks, cloud architecture, and agile methodologies.",
+    experience: [
+      {
+        id: crypto.randomUUID(),
+        jobTitle: "Senior Frontend Developer",
+        company: "Tech Solutions Inc.",
+        location: "New York, NY",
+        startDate: "Jan 2021",
+        endDate: "",
+        current: true,
+        description: "- Led the front-end development of a high-traffic SaaS platform using Next.js and React.\n- Improved application performance by 40% through code splitting and lazy loading.\n- Mentored junior developers and conducted rigorous code reviews to maintain code quality.",
+      },
+      {
+        id: crypto.randomUUID(),
+        jobTitle: "Web Developer",
+        company: "Creative Agency",
+        location: "Remote",
+        startDate: "Mar 2018",
+        endDate: "Dec 2020",
+        current: false,
+        description: "- Developed responsive and interactive websites for diverse clients using React and Tailwind CSS.\n- Integrated RESTful APIs and optimized database queries to enhance application speed.\n- Collaborated with UX/UI designers to translate wireframes into pixel-perfect interfaces.",
+      }
+    ],
+    education: [
+      {
+        id: crypto.randomUUID(),
+        degree: "Bachelor of Science in Computer Science",
+        institution: "State University",
+        location: "Boston, MA",
+        startDate: "Sep 2014",
+        endDate: "May 2018",
+        grade: "3.8 GPA",
+        description: "Specialized in Software Engineering and Artificial Intelligence. Led the university coding club.",
+      }
+    ],
+    skills: [
+      { id: crypto.randomUUID(), name: "React / Next.js", level: "Expert" },
+      { id: crypto.randomUUID(), name: "TypeScript", level: "Advanced" },
+      { id: crypto.randomUUID(), name: "Node.js", level: "Advanced" },
+      { id: crypto.randomUUID(), name: "Tailwind CSS", level: "Expert" },
+    ],
+    projects: [
+      {
+        id: crypto.randomUUID(),
+        name: "E-Commerce Dashboard",
+        description: "A comprehensive dashboard for e-commerce vendors to track sales, manage inventory, and analyze customer data.",
+        technologies: "React, Node.js, PostgreSQL",
+        projectUrl: "",
+        githubUrl: "",
+      }
+    ],
     certifications: [],
-    languages: [],
+    languages: [
+      { id: crypto.randomUUID(), name: "English", proficiency: "Native" },
+      { id: crypto.randomUUID(), name: "Spanish", proficiency: "Intermediate" }
+    ],
     achievements: [],
     customSections: [],
   },
@@ -55,6 +118,7 @@ export interface ResumeState {
   updateResume: (id: string, data: Partial<Resume>) => void;
   deleteResume: (id: string) => void;
   duplicateResume: (id: string, newName: string) => void;
+  clearResumeData: (id: string) => void;
   
   // Basic Info
   setTemplate: (resumeId: string, template: ResumeTemplate) => void;
@@ -157,6 +221,30 @@ export const useResumeStore = create<ResumeState>()(
 
           set((state) => ({
             resumes: [...state.resumes, newResume],
+          }));
+        },
+
+        clearResumeData: (id: string) => {
+          set((state) => ({
+            resumes: state.resumes.map((r) => {
+              if (r.id !== id) return r;
+              return {
+                ...r,
+                updatedAt: new Date().toISOString(),
+                data: {
+                  personalInfo: blankPersonalInfo,
+                  summary: "",
+                  experience: [],
+                  education: [],
+                  skills: [],
+                  projects: [],
+                  certifications: [],
+                  languages: [],
+                  achievements: [],
+                  customSections: [],
+                }
+              };
+            })
           }));
         },
 

@@ -41,9 +41,9 @@ export function ResumeProgress({ data }: { data: ResumeData }) {
   }, [data]);
 
   // Determine color based on progress
-  let colorClass = "bg-red-500";
+  let colorClass = "bg-blue-500";
   if (progress > 40) colorClass = "bg-orange-500";
-  if (progress > 70) colorClass = "bg-blue-500";
+  if (progress > 70) colorClass = "bg-gray-500";
   if (progress === 100) colorClass = "bg-green-500";
 
   return (

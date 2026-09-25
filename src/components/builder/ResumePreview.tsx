@@ -49,10 +49,12 @@ export function ResumePreview({ resume }: { resume: Resume }) {
 
   return (
     <div 
+      id="resume-preview-container"
       ref={containerRef}
       className="h-full w-full overflow-y-auto overflow-x-hidden flex justify-center bg-[#F8FAFC] dark:bg-[#0B0F19] print:bg-white print:p-0 print:block"
     >
       <div 
+        id="resume-preview-wrapper"
         style={{ 
           width: `${794 * scale}px`, 
           height: `${paperHeight * scale}px`,
