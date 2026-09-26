@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ScreenWarningModal } from "@/components/layout/ScreenWarningModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
         />
         <ThemeProvider>
           <InitialLoaderWrapper>
+            <ScreenWarningModal />
             <Header />
             <main className="flex-grow flex flex-col">{children}</main>
             <Footer />

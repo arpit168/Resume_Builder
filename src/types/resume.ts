@@ -1,14 +1,5 @@
 export type ResumeTemplate =
-  | "modern"
-  | "professional"
-  | "minimal"
-  | "executive"
-  | "creative"
-  | "elegant"
-  | "corporate"
-  | "standard"
-  | "organic"
-  | "structured";
+  "modern" | "professional" | "minimal" | "standard" | "structured";
 export type ResumeTheme = "blue" | "green" | "purple" | "red" | "gray";
 
 export interface PersonalInfo {
@@ -121,6 +112,11 @@ export interface ElementDesign {
   margin?: string;
   borderRadius?: string;
   border?: string;
+  opacity?: string | number;
+  boxShadow?: string;
+  textDecoration?: string;
+  zIndex?: number;
+  visibility?: string;
   display?: string;
   flexDirection?: string;
   justifyContent?: string;

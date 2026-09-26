@@ -5,7 +5,7 @@ import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 import { useEffect, useRef, useState } from "react";
 import { getUniqueSelector } from "@/utils/design";
 import { useResume } from "@/hooks/useResume";
-import { ZoomIn, ZoomOut, Maximize } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize, Keyboard } from "lucide-react";
 
 export function DesignCanvas({
   resume,
@@ -100,6 +100,12 @@ export function DesignCanvas({
     // Triple click selects the entire page (root wrapper)
     if (e.detail === 3) {
       onSelect("#resume-preview-paper");
+      return;
+    }
+
+    // Double click releases (deselects) the element
+    if (e.detail === 2) {
+      onSelect(null);
       return;
     }
 
@@ -264,6 +270,44 @@ export function DesignCanvas({
             )}
           </div>
         </div>
+      </div>
+      {/* Floating Canvas Controls */}
+      <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-1.5 z-20">
+        <button
+          onClick={() =>
+            window.dispatchEvent(new KeyboardEvent("keydown", { key: "?" }))
+          }
+          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-lg transition-colors"
+          title="Keyboard Shortcuts (?)"
+        >
+          <Keyboard className="w-4 h-4" />
+        </button>
+        <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1"></div>
+        <button
+          onClick={() => setScale((s) => Math.max(0.25, s - 0.1))}
+          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-lg transition-colors"
+          title="Zoom Out (Ctrl -)"
+        >
+          <ZoomOut className="w-4 h-4" />
+        </button>
+        <span className="text-xs font-medium text-gray-700 dark:text-gray-300 w-12 text-center select-none">
+          {Math.round(scale * 100)}%
+        </span>
+        <button
+          onClick={() => setScale((s) => Math.min(3, s + 0.1))}
+          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-lg transition-colors"
+          title="Zoom In (Ctrl +)"
+        >
+          <ZoomIn className="w-4 h-4" />
+        </button>
+        <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1"></div>
+        <button
+          onClick={fitToScreen}
+          className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+          title="Fit to Screen"
+        >
+          <Maximize className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );
