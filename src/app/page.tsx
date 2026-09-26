@@ -9,7 +9,11 @@ import {
   FileText,
   CheckCircle2,
   Download,
+  LayoutTemplate,
+  Edit,
+  Settings,
 } from "lucide-react";
+import { Particles } from "@/components/layout/Particles";
 
 export default function Home() {
   return (
@@ -18,6 +22,9 @@ export default function Home() {
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-100/40 dark:bg-blue-600/10 blur-[100px] rounded-full pointer-events-none -z-10 translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[800px] h-[500px] bg-blue-50/60 dark:bg-blue-900/20 blur-[120px] rounded-full pointer-events-none -z-10 -translate-x-1/4 translate-y-1/4" />
       <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-purple-50/60 dark:bg-purple-900/20 blur-[100px] rounded-full pointer-events-none -z-10 translate-x-1/4 translate-y-1/4" />
+
+      {/* Particles Effect */}
+      <Particles />
 
       {/* Hero Section */}
       <section className="relative px-6 pt-16 pb-12 md:pt-24 md:pb-20 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 z-10">
@@ -137,62 +144,191 @@ export default function Home() {
         </div>
 
         {/* Right Graphic Mockup */}
-        <div className="flex-1 relative z-10 w-full max-w-lg lg:max-w-none flex justify-center mt-16 lg:mt-0 lg:ml-10">
-          <div className="relative w-[340px] md:w-[400px] h-[520px]">
-            {/* The Resume Document Container */}
-            <div className="absolute inset-0 bg-white dark:bg-[#151B2B] rounded-[24px] shadow-2xl rotate-2 transform border border-gray-100 dark:border-gray-800 flex flex-col p-6 z-10">
-              {/* Header inside resume */}
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-gray-100 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                  <User className="w-8 h-8 text-blue-500" />
+        <div className="flex-1 relative z-10 w-full max-w-2xl lg:max-w-none flex justify-center mt-16 lg:mt-0 lg:ml-6 xl:ml-12">
+          <div className="relative w-full max-w-[600px] xl:max-w-[700px] aspect-[16/11] sm:aspect-[16/10]">
+            {/* The App UI Container */}
+            <div className="absolute inset-0 bg-[#F8FAFC] dark:bg-[#121826] rounded-2xl shadow-2xl rotate-2 transform border border-gray-200 dark:border-gray-800 flex overflow-hidden z-10">
+              {/* 1. Left Sidebar */}
+              <div className="w-[20%] border-r border-gray-200 dark:border-gray-800/60 p-3 sm:p-4 flex flex-col gap-6 bg-white dark:bg-[#0B0F19]">
+                {/* Logo */}
+                <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-gray-900 dark:text-white mt-1">
+                  <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 shrink-0" />
+                  <span className="hidden sm:block">HireCraft</span>
                 </div>
-                <div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                    Arpit Gupta
+
+                {/* Nav items */}
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2 bg-blue-500 text-white p-2 rounded-lg text-xs font-medium shadow-sm shadow-blue-500/20">
+                    <LayoutTemplate className="w-4 h-4 shrink-0" />
+                    <span className="hidden sm:block">Templates</span>
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    Frontend Developer
+                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 p-2 rounded-lg text-xs font-medium transition-colors">
+                    <Edit className="w-4 h-4 shrink-0" />
+                    <span className="hidden sm:block">Editor</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 p-2 rounded-lg text-xs font-medium transition-colors">
+                    <Settings className="w-4 h-4 shrink-0" />
+                    <span className="hidden sm:block">Settings</span>
                   </div>
                 </div>
               </div>
 
-              {/* Fake Content Sections */}
-              <div className="space-y-6">
-                <div>
-                  <div className="text-sm font-bold text-gray-900 dark:text-white mb-3">
-                    Experience
-                  </div>
-                  <div className="h-2 w-full bg-gray-100 dark:bg-gray-800 rounded-full mb-2"></div>
-                  <div className="h-2 w-[85%] bg-gray-100 dark:bg-gray-800 rounded-full mb-2"></div>
-                  <div className="h-2 w-[60%] bg-gray-100 dark:bg-gray-800 rounded-full"></div>
+              {/* 2. Middle Column */}
+              <div className="w-[35%] sm:w-[40%] p-4 sm:p-5 flex flex-col gap-6 bg-[#F8FAFC] dark:bg-[#121826]">
+                {/* Search Bar Mock */}
+                <div className="w-full h-7 bg-white dark:bg-[#1A2234] rounded-md border border-gray-200 dark:border-gray-700/50 flex items-center px-2 shadow-sm">
+                  <div className="w-3 h-3 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                  <div className="w-1 h-3 bg-gray-300 dark:bg-gray-600 -ml-0.5 mt-2 transform -rotate-45" />
+                  <div className="ml-2 w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
                 </div>
+
+                {/* Choose a Template */}
                 <div>
-                  <div className="text-sm font-bold text-gray-900 dark:text-white mb-3">
-                    Education
+                  <div className="text-[11px] font-bold text-gray-900 dark:text-white mb-3">
+                    Choose a Template
                   </div>
-                  <div className="h-2 w-[90%] bg-gray-100 dark:bg-gray-800 rounded-full mb-2"></div>
-                  <div className="h-2 w-[70%] bg-gray-100 dark:bg-gray-800 rounded-full mb-2"></div>
-                  <div className="h-2 w-[50%] bg-gray-100 dark:bg-gray-800 rounded-full"></div>
+                  <div className="flex gap-2">
+                    <div className="w-1/3 aspect-[1/1.4] bg-white dark:bg-blue-900/10 border-2 border-blue-500 rounded flex flex-col p-1 shadow-sm">
+                      <div className="w-full h-1/4 bg-blue-100 dark:bg-blue-900/40 rounded-sm mb-1"></div>
+                      <div className="w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full mb-0.5"></div>
+                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
+                    </div>
+                    <div className="w-1/3 aspect-[1/1.4] bg-white dark:bg-[#1A2234] border border-gray-200 dark:border-gray-700/50 rounded flex flex-col p-1 shadow-sm">
+                      <div className="w-full h-2 bg-gray-100 dark:bg-gray-800 rounded-sm mb-1"></div>
+                      <div className="w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full mb-0.5"></div>
+                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
+                    </div>
+                    <div className="w-1/3 aspect-[1/1.4] bg-white dark:bg-[#1A2234] border border-gray-200 dark:border-gray-700/50 rounded flex flex-col p-1 shadow-sm">
+                      <div className="flex gap-1 mb-1">
+                        <div className="w-1/3 h-4 bg-gray-100 dark:bg-gray-800 rounded-sm"></div>
+                        <div className="w-2/3 h-4 bg-gray-100 dark:bg-gray-800 rounded-sm"></div>
+                      </div>
+                      <div className="w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full mb-0.5"></div>
+                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-sm font-bold text-gray-900 dark:text-white mb-3">
-                    Skills
+
+                {/* Your Resume */}
+                <div className="flex-1">
+                  <div className="text-[11px] font-bold text-gray-900 dark:text-white mb-3">
+                    Your Resume
                   </div>
-                  <div className="flex flex-col gap-2">
+                  <div className="space-y-4">
+                    {/* Items */}
                     <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <div className="h-2 w-16 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
-                      <div className="h-2 w-24 bg-blue-100 dark:bg-blue-900/40 rounded-full"></div>
+                      <div className="w-2 h-2 rounded-full bg-red-400"></div>
+                      <div className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                        Personal Info
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <div className="h-2 w-20 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
-                      <div className="h-2 w-16 bg-blue-100 dark:bg-blue-900/40 rounded-full"></div>
+                    <div className="flex gap-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-400 mt-1"></div>
+                      <div className="flex flex-col gap-1.5 w-full">
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                          Experience
+                        </div>
+                        <div className="h-1 w-[90%] bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                        <div className="h-1 w-[70%] bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <div className="h-2 w-12 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
-                      <div className="h-2 w-20 bg-blue-100 dark:bg-blue-900/40 rounded-full"></div>
+                    <div className="flex gap-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-600 mt-1"></div>
+                      <div className="flex flex-col gap-1.5 w-full">
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                          Education
+                        </div>
+                        <div className="h-1 w-[80%] bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                        <div className="h-1 w-[50%] bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-400 mt-1"></div>
+                      <div className="flex flex-col gap-1.5 w-full">
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                          Skills
+                        </div>
+                        <div className="h-1 w-[85%] bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. Right Column - Preview */}
+              <div className="flex-1 bg-gray-100/50 dark:bg-black/20 p-4 sm:p-5 flex items-center justify-center border-l border-gray-200 dark:border-gray-800/60 relative">
+                {/* Top header with icons */}
+                <div className="absolute top-4 right-4 flex gap-2">
+                  <div className="w-4 h-4 rounded-full bg-gray-200/50 dark:bg-gray-800/50 flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+                  </div>
+                  <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
+                    <User className="w-2.5 h-2.5 text-white" />
+                  </div>
+                </div>
+
+                <div className="w-full h-full max-h-[90%] bg-white rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_15px_rgba(0,0,0,0.2)] p-4 sm:p-5 overflow-hidden flex flex-col border border-gray-100">
+                  {/* Arpit Gupta header */}
+                  <div className="flex items-center gap-3 mb-5 border-b border-gray-50 pb-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden shrink-0 bg-blue-600 flex items-center justify-center">
+                      <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-xs sm:text-sm font-bold text-gray-900 mb-0.5">
+                        Arpit Gupta
+                      </div>
+                      <div className="text-[9px] sm:text-[10px] text-gray-500 font-medium">
+                        Frontend Developer
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-[10px] font-bold text-gray-800 mb-2 flex items-center gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-blue-600 text-white flex items-center justify-center text-[7px] font-bold">
+                          ×
+                        </div>{" "}
+                        Experience
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="w-1 h-1 rounded-full bg-gray-300 mt-1"></div>
+                        <div className="w-full">
+                          <div className="h-1.5 w-full bg-gray-200 rounded-full mb-1.5"></div>
+                          <div className="h-1.5 w-[85%] bg-gray-200 rounded-full mb-1.5"></div>
+                          <div className="h-1.5 w-[60%] bg-gray-200 rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-gray-800 mb-2 flex items-center gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-blue-600 text-white flex items-center justify-center text-[7px] font-bold">
+                          ×
+                        </div>{" "}
+                        Skills
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="w-1 h-1 rounded-full bg-gray-300 mt-1"></div>
+                        <div className="w-full">
+                          <div className="h-1.5 w-[90%] bg-gray-200 rounded-full mb-1.5"></div>
+                          <div className="h-1.5 w-[70%] bg-gray-200 rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-gray-800 mb-2 flex items-center gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-blue-600 text-white flex items-center justify-center text-[7px] font-bold">
+                          ×
+                        </div>{" "}
+                        Education
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="w-1 h-1 rounded-full bg-gray-300 mt-1"></div>
+                        <div className="w-full">
+                          <div className="h-1.5 w-[80%] bg-gray-200 rounded-full mb-1.5"></div>
+                          <div className="h-1.5 w-[50%] bg-gray-200 rounded-full"></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

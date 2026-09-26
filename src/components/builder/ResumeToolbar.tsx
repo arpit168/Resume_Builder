@@ -19,12 +19,7 @@ const TEMPLATES: ResumeTemplate[] = [
   "modern",
   "professional",
   "minimal",
-  "executive",
-  "creative",
-  "elegant",
-  "corporate",
   "standard",
-  "organic",
   "structured",
 ];
 

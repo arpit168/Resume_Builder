@@ -67,6 +67,21 @@ export function DesignStyleInjector({ design }: { design?: DesignConfig }) {
         if (styles.border) {
           rules.push(`border: ${styles.border} !important;`);
         }
+        if (styles.opacity !== undefined) {
+          rules.push(`opacity: ${styles.opacity} !important;`);
+        }
+        if (styles.boxShadow) {
+          rules.push(`box-shadow: ${styles.boxShadow} !important;`);
+        }
+        if (styles.textDecoration) {
+          rules.push(`text-decoration: ${styles.textDecoration} !important;`);
+        }
+        if (styles.zIndex !== undefined) {
+          rules.push(`z-index: ${styles.zIndex} !important;`);
+        }
+        if (styles.visibility) {
+          rules.push(`visibility: ${styles.visibility} !important;`);
+        }
         if (styles.display) {
           rules.push(`display: ${styles.display} !important;`);
         }

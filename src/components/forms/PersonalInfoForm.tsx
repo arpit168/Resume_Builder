@@ -50,9 +50,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
           Personal Information
         </h2>
 
-        {["creative", "elegant", "organic", "structured"].includes(
-          resume.template,
-        ) && (
+        {["structured"].includes(resume.template) && (
           <div className="mb-6 flex items-start gap-6">
             <div className="relative">
               {data.photoUrl ? (

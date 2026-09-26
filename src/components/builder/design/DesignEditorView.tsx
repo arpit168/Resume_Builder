@@ -7,6 +7,8 @@ import { DesignToolbar } from "./DesignToolbar";
 import { DesignCanvas } from "./DesignCanvas";
 import { DesignSidebar } from "./DesignSidebar";
 import { DesignStyleInjector } from "./DesignStyleInjector";
+import { KeyboardShortcutsModal } from "./KeyboardShortcutsModal";
+import { CommandPalette, CommandItem } from "./CommandPalette";
 
 function useDesignHistory(
   resumeId: string,
@@ -141,6 +143,127 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
     resetDesign,
   );
 
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
+
+  useEffect(() => {
+    if (!resume) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Prevent triggering if typing in inputs
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        e.target instanceof HTMLSelectElement ||
+        (e.target as HTMLElement).isContentEditable
+      ) {
+        return;
+      }
+
+      if (e.key === "?" || (e.ctrlKey && e.key === "/")) {
+        e.preventDefault();
+        setShowShortcuts(true);
+      }
+
+      if (e.ctrlKey && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setShowCommandPalette(true);
+      }
+
+      // Global formatting overrides when an element is selected
+      if (e.ctrlKey && e.key.toLowerCase() === "b" && selectedSelector) {
+        e.preventDefault();
+        const currentW =
+          resume.design?.elements?.[selectedSelector]?.fontWeight;
+        updateDesign(resume.id, {
+          elements: {
+            [selectedSelector]: {
+              fontWeight: currentW === "bold" ? "normal" : "bold",
+            },
+          },
+        });
+      }
+
+      if (e.ctrlKey && e.key.toLowerCase() === "i" && selectedSelector) {
+        e.preventDefault();
+        const currentS = resume.design?.elements?.[selectedSelector]?.fontStyle;
+        updateDesign(resume.id, {
+          elements: {
+            [selectedSelector]: {
+              fontStyle: currentS === "italic" ? "normal" : "italic",
+            },
+          },
+        });
+      }
+
+      if (e.ctrlKey && e.key.toLowerCase() === "u" && selectedSelector) {
+        e.preventDefault();
+        const currentDecor =
+          resume.design?.elements?.[selectedSelector]?.textDecoration;
+        updateDesign(resume.id, {
+          elements: {
+            [selectedSelector]: {
+              textDecoration:
+                currentDecor === "underline" ? "none" : "underline",
+            },
+          },
+        });
+      }
+
+      // Arrow key fine-movement
+      if (
+        (e.key === "ArrowUp" ||
+          e.key === "ArrowDown" ||
+          e.key === "ArrowLeft" ||
+          e.key === "ArrowRight") &&
+        selectedSelector
+      ) {
+        e.preventDefault(); // Prevent page scrolling
+        const currentX = resume.design?.elements?.[selectedSelector]?.x || 0;
+        const currentY = resume.design?.elements?.[selectedSelector]?.y || 0;
+
+        let newX = currentX;
+        let newY = currentY;
+        const moveAmount = e.shiftKey ? 10 : 2; // Fine control (2px), or Shift for 10px
+
+        if (e.key === "ArrowUp") newY -= moveAmount;
+        if (e.key === "ArrowDown") newY += moveAmount;
+        if (e.key === "ArrowLeft") newX -= moveAmount;
+        if (e.key === "ArrowRight") newX += moveAmount;
+
+        updateDesign(resume.id, {
+          elements: {
+            [selectedSelector]: {
+              x: newX,
+              y: newY,
+            },
+          },
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [resume, selectedSelector, updateDesign]);
+
+  const commands: CommandItem[] = [
+    {
+      id: "save",
+      label: "Save Design",
+      shortcut: "Ctrl+S",
+      action: () => alert("Design saved."),
+    },
+    { id: "undo", label: "Undo", shortcut: "Ctrl+Z", action: history.undo },
+    { id: "redo", label: "Redo", shortcut: "Ctrl+Y", action: history.redo },
+    { id: "reset", label: "Reset All Design", action: history.reset },
+    {
+      id: "print",
+      label: "Print / Export PDF",
+      shortcut: "Ctrl+P",
+      action: () => window.print(),
+    },
+  ];
+
   if (!isHydrated)
     return <div className="p-8 text-center">Loading design editor...</div>;
 
@@ -198,6 +321,16 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
           <DesignSidebar resume={resume} selectedSelector={selectedSelector} />
         </div>
       </div>
+
+      <KeyboardShortcutsModal
+        isOpen={showShortcuts}
+        onClose={() => setShowShortcuts(false)}
+      />
+      <CommandPalette
+        isOpen={showCommandPalette}
+        onClose={() => setShowCommandPalette(false)}
+        commands={commands}
+      />
     </div>
   );
 }
