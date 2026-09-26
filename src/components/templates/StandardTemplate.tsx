@@ -122,8 +122,7 @@ export function StandardTemplate({
       {/* Portfolio QR Code */}
       {data.personalInfo.portfolio && (
         <div className="flex flex-col items-end absolute top-12 right-12 text-center">
-          <div
-          >
+          <div>
             <a
               href={
                 data.personalInfo.portfolio.startsWith("http")

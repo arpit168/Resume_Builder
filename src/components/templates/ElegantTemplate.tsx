@@ -259,9 +259,7 @@ export function ElegantTemplate({
           {data.personalInfo.portfolio && (
             <div className="mt-4 flex flex-col items-end">
               <span className="font-bold text-gray-900 mb-1">Portfolio</span>
-              <div
-                className="bg-white p-1 rounded shadow-sm border border-gray-100"
-              >
+              <div className="bg-white p-1 rounded shadow-sm border border-gray-100">
                 <a
                   href={
                     data.personalInfo.portfolio.startsWith("http")

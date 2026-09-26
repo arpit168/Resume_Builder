@@ -102,6 +102,37 @@ export interface ResumeData {
   customSections: CustomSection[];
 }
 
+export interface ElementDesign {
+  x?: number;
+  y?: number;
+  width?: string | number;
+  height?: string | number;
+  fontFamily?: string;
+  fontSize?: string;
+  fontWeight?: string;
+  fontStyle?: string;
+  textTransform?: string;
+  textAlign?: string;
+  letterSpacing?: string;
+  lineHeight?: string;
+  color?: string;
+  backgroundColor?: string;
+  padding?: string;
+  margin?: string;
+  borderRadius?: string;
+  border?: string;
+  display?: string;
+  flexDirection?: string;
+  justifyContent?: string;
+  alignItems?: string;
+}
+
+export interface DesignConfig {
+  layout?: "A4" | "Letter";
+  theme?: string;
+  elements?: Record<string, ElementDesign>;
+}
+
 export interface Resume {
   id: string;
   name: string;
@@ -110,4 +141,5 @@ export interface Resume {
   template: ResumeTemplate;
   colorTheme: ResumeTheme;
   data: ResumeData;
+  design?: DesignConfig;
 }

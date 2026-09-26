@@ -41,7 +41,7 @@ export function ResumeBuilderView({ resumeId }: { resumeId: string }) {
 
         {/* Preview Side */}
         <div
-          className={`w-full lg:w-1/2 flex-col bg-gray-100 dark:bg-gray-800/50 relative ${mobileView === "preview" ? "flex" : "hidden lg:flex"}`}
+          className={`w-full lg:w-1/2 flex-col bg-gray-100 dark:bg-gray-800/50 relative print:!block print:!w-full ${mobileView === "preview" ? "flex" : "hidden lg:flex"}`}
         >
           <ResumePreview resume={resume} />
         </div>

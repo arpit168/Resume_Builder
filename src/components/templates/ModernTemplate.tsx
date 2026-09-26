@@ -280,9 +280,7 @@ export function ModernTemplate({
         <div className="w-1/3 flex flex-col gap-6">
           {data.personalInfo.portfolio && (
             <section className="flex flex-col items-center mb-2">
-              <div
-                className="bg-white p-1 rounded shadow-sm border border-gray-200"
-              >
+              <div className="bg-white p-1 rounded shadow-sm border border-gray-200">
                 <a
                   href={
                     data.personalInfo.portfolio.startsWith("http")

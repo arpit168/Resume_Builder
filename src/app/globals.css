@@ -69,22 +69,48 @@ body {
   }
 
   #resume-preview-wrapper {
-    width: 100% !important;
+    width: 794px !important;
     height: auto !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     padding: 0 !important;
     display: block !important;
-    position: static !important;
+    position: relative !important;
   }
 
   #resume-preview-paper {
     transform: none !important;
     margin: 0 !important;
-    width: 100% !important;
+    width: 794px !important;
     height: auto !important;
-    min-height: 100vh !important;
+    min-height: 1123px !important;
     box-shadow: none !important;
-    position: static !important;
+    position: relative !important;
+  }
+
+  /* Prevent awkward page breaks inside important elements */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Avoid breaking inside individual resume items */
+  section > div,
+  ul > li,
+  ol > li,
+  .break-inside-avoid {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Keep images/icons from breaking */
+  img,
+  svg {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }

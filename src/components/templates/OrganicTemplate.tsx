@@ -255,9 +255,7 @@ export function OrganicTemplate({
               )}
               {data.personalInfo.portfolio && (
                 <div className="pt-2 flex flex-col items-start">
-                  <div
-                    className="bg-white p-1 rounded border border-gray-200"
-                  >
+                  <div className="bg-white p-1 rounded border border-gray-200">
                     <a
                       href={
                         data.personalInfo.portfolio.startsWith("http")

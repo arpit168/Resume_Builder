@@ -156,7 +156,7 @@ export function ProfessionalTemplate({
         )}
         <div className="text-[12px] text-gray-600 flex flex-wrap justify-center items-center gap-x-2 gap-y-1">
           {contactItems.map((item, index) => (
-            <span key={index} className="flex items-center">
+            <span key={index} className="flex items-center whitespace-nowrap">
               {item}
               {index < contactItems.length - 1 && (
                 <span className="mx-2 text-gray-400">|</span>

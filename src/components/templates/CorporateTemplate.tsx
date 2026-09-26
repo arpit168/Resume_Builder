@@ -119,9 +119,7 @@ export function CorporateTemplate({
         </div>
         {data.personalInfo.portfolio && (
           <div className="absolute top-8 right-8 flex flex-col items-center">
-            <div
-              className="p-1 border border-gray-300 bg-white"
-            >
+            <div className="p-1 border border-gray-300 bg-white">
               <a
                 href={
                   data.personalInfo.portfolio.startsWith("http")

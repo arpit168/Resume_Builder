@@ -142,9 +142,7 @@ export function CreativeTemplate({
 
           {data.personalInfo.portfolio && (
             <div className="mt-8 flex flex-col items-center">
-              <div
-                className="bg-white p-1 rounded"
-              >
+              <div className="bg-white p-1 rounded">
                 <a
                   href={
                     data.personalInfo.portfolio.startsWith("http")

@@ -12,6 +12,7 @@ import {
   Achievement,
   CustomSection,
   ResumeTemplate,
+  DesignConfig,
 } from "../types/resume";
 
 const dummyPersonalInfo: PersonalInfo = {
@@ -216,6 +217,10 @@ export interface ResumeState {
     section: Partial<CustomSection>,
   ) => void;
   deleteCustomSection: (resumeId: string, sectionId: string) => void;
+
+  // Design Editor
+  updateDesign: (resumeId: string, design: Partial<DesignConfig>) => void;
+  resetDesign: (resumeId: string) => void;
 }
 
 export const useResumeStore = create<ResumeState>()(
@@ -412,6 +417,42 @@ export const useResumeStore = create<ResumeState>()(
           get()._updateItem(resumeId, "customSections", sectionId, section),
         deleteCustomSection: (resumeId, sectionId) =>
           get()._deleteItem(resumeId, "customSections", sectionId),
+
+        updateDesign: (resumeId, designUpdate) => {
+          set((state) => ({
+            resumes: state.resumes.map((r) => {
+              if (r.id !== resumeId) return r;
+              return {
+                ...r,
+                updatedAt: new Date().toISOString(),
+                design: {
+                  ...r.design,
+                  ...designUpdate,
+                  elements: {
+                    ...(r.design?.elements || {}),
+                    ...(designUpdate.elements || {}),
+                  },
+                },
+              };
+            }),
+          }));
+        },
+
+        resetDesign: (resumeId) => {
+          set((state) => ({
+            resumes: state.resumes.map((r) => {
+              if (r.id !== resumeId) return r;
+              return {
+                ...r,
+                updatedAt: new Date().toISOString(),
+                design: {
+                  ...r.design,
+                  elements: {},
+                },
+              };
+            }),
+          }));
+        },
       };
     },
     {

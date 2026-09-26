@@ -21,6 +21,8 @@ export const metadata: Metadata = {
     "Create, customize, preview and download professional resumes directly in your browser.",
 };
 
+import { InitialLoaderWrapper } from "@/components/layout/InitialLoaderWrapper";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,10 +35,26 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="min-h-screen flex flex-col font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const storedTheme = localStorage.getItem('resume-builder-theme');
+                if (storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
         <ThemeProvider>
-          <Header />
-          <main className="flex-grow flex flex-col">{children}</main>
-          <Footer />
+          <InitialLoaderWrapper>
+            <Header />
+            <main className="flex-grow flex flex-col">{children}</main>
+            <Footer />
+          </InitialLoaderWrapper>
         </ThemeProvider>
       </body>
     </html>

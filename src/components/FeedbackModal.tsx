@@ -1,7 +1,7 @@
-'use client';
-import React, { useState } from 'react';
-import { X, Send, CheckCircle, AlertCircle } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+"use client";
+import React, { useState } from "react";
+import { X, Send, CheckCircle, AlertCircle } from "lucide-react";
+import emailjs from "@emailjs/browser";
 
 interface FeedbackModalProps {
   isOpen: boolean;
@@ -9,25 +9,28 @@ interface FeedbackModalProps {
 }
 
 export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setStatus('idle');
+    setStatus("idle");
 
     try {
       // Please replace these with your actual EmailJS credentials
       // Or set them in your .env.local file
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+      const serviceId =
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID";
+      const templateId =
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID";
+      const publicKey =
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
 
       const templateParams = {
         from_name: name,
@@ -41,21 +44,21 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
       };
 
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
-      setStatus('success');
-      
+      setStatus("success");
+
       // Reset form
-      setName('');
-      setEmail('');
-      setMessage('');
-      
+      setName("");
+      setEmail("");
+      setMessage("");
+
       // Auto close after 3 seconds
       setTimeout(() => {
         onClose();
-        setStatus('idle');
+        setStatus("idle");
       }, 3000);
     } catch (error) {
-      console.error('Failed to send feedback:', error);
-      setStatus('error');
+      console.error("Failed to send feedback:", error);
+      setStatus("error");
     } finally {
       setIsSubmitting(false);
     }
@@ -65,34 +68,44 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
         <div className="flex justify-between items-center p-5 border-b border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Send Feedback</h2>
-          <button 
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+            Send Feedback
+          </h2>
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <X size={20} />
           </button>
         </div>
-        
+
         <div className="p-5">
-          {status === 'success' ? (
+          {status === "success" ? (
             <div className="flex flex-col items-center justify-center py-8 text-center space-y-4">
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center">
                 <CheckCircle size={32} />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">Thank you!</h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-1">Your feedback has been sent successfully.</p>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                  Thank you!
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 mt-1">
+                  Your feedback has been sent successfully.
+                </p>
               </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                We&apos;d love to hear your thoughts! Tell us how we can improve HireCraft.
+                We&apos;d love to hear your thoughts! Tell us how we can improve
+                HireCraft.
               </p>
-              
+
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Name
                 </label>
                 <input
@@ -105,9 +118,12 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                   placeholder="Your name"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Email
                 </label>
                 <input
@@ -120,9 +136,12 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                   placeholder="your.email@example.com"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Feedback
                 </label>
                 <textarea
@@ -136,13 +155,13 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                 />
               </div>
 
-              {status === 'error' && (
+              {status === "error" && (
                 <div className="flex items-center gap-2 text-red-600 dark:text-red-400 text-sm bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">
                   <AlertCircle size={16} />
                   <span>Failed to send feedback. Please try again.</span>
                 </div>
               )}
-              
+
               <button
                 type="submit"
                 disabled={isSubmitting}

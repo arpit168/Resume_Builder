@@ -63,6 +63,35 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme, mounted]);
 
+  // Handle print mode (always force light mode during print)
+  useEffect(() => {
+    if (!mounted) return;
+
+    let wasDark = false;
+    const root = window.document.documentElement;
+
+    const handleBeforePrint = () => {
+      wasDark = root.classList.contains("dark");
+      if (wasDark) {
+        root.classList.remove("dark");
+      }
+    };
+
+    const handleAfterPrint = () => {
+      if (wasDark) {
+        root.classList.add("dark");
+      }
+    };
+
+    window.addEventListener("beforeprint", handleBeforePrint);
+    window.addEventListener("afterprint", handleAfterPrint);
+
+    return () => {
+      window.removeEventListener("beforeprint", handleBeforePrint);
+      window.removeEventListener("afterprint", handleAfterPrint);
+    };
+  }, [mounted]);
+
   return (
     <ThemeContext.Provider value={{ theme, setTheme: setThemeState }}>
       {children}

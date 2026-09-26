@@ -13,6 +13,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import React, { useState, useRef } from "react";
+import Link from "next/link";
 
 const TEMPLATES: ResumeTemplate[] = [
   "modern",
@@ -303,6 +304,13 @@ export function ResumeToolbar({
 
         <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 hidden sm:block"></div>
 
+        <Link
+          href={`/builder/${resume.id}/design`}
+          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50 transition-colors font-medium mr-1"
+        >
+          <Edit className="w-4 h-4" />{" "}
+          <span className="hidden sm:inline">Design Mode</span>
+        </Link>
         <button
           onClick={() => window.print()}
           className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors font-medium"

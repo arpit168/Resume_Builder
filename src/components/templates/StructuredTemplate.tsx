@@ -148,8 +148,7 @@ export function StructuredTemplate({
         </div>
         {data.personalInfo.portfolio && (
           <div className="absolute top-12 right-12 flex flex-col items-end">
-            <div
-            >
+            <div>
               <a
                 href={
                   data.personalInfo.portfolio.startsWith("http")

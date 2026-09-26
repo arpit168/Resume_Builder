@@ -3,6 +3,7 @@
 import { Resume } from "@/types/resume";
 import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 import { useEffect, useRef, useState } from "react";
+import { DesignStyleInjector } from "@/components/builder/design/DesignStyleInjector";
 
 export function ResumePreview({ resume }: { resume: Resume }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,6 +54,7 @@ export function ResumePreview({ resume }: { resume: Resume }) {
       ref={containerRef}
       className="h-full w-full overflow-y-auto overflow-x-hidden flex justify-center bg-[#F8FAFC] dark:bg-[#0B0F19] print:bg-white print:p-0 print:block"
     >
+      <DesignStyleInjector design={resume.design} />
       <div
         id="resume-preview-wrapper"
         style={{
