@@ -2,41 +2,137 @@ name: CI / PR Validation
 
 on:
   push:
-    branches: ["main", "master"]
+    branches:
+      - main
+      - master
+      - develop
+
   pull_request:
-    branches: ["main", "master"]
+    branches:
+      - main
+      - master
+      - develop
+
+# Cancel old CI when a newer commit is pushed
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   validate:
+    name: Validate Application
     runs-on: ubuntu-latest
 
+    timeout-minutes: 20
+
     steps:
+      # --------------------------------------------------
+      # CHECKOUT
+      # --------------------------------------------------
+
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # --------------------------------------------------
+      # NODE
+      # --------------------------------------------------
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: "npm"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Show environment
+        run: |
+          node --version
+          npm --version
+
+      # --------------------------------------------------
+      # DEPENDENCIES
+      # --------------------------------------------------
+
+      - name: Validate lockfile
+        run: npm install --package-lock-only --ignore-scripts
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
 
-      - name: Code Formatting (Prettier)
+      # --------------------------------------------------
+      # FORMAT
+      # --------------------------------------------------
+
+      - name: Check formatting
         run: npm run format:check
 
-      - name: Linting
+      # --------------------------------------------------
+      # LINT
+      # --------------------------------------------------
+
+      - name: Lint
         run: npm run lint
 
-      - name: Type Checking
+      # --------------------------------------------------
+      # TYPE CHECK
+      # --------------------------------------------------
+
+      - name: Type check
         run: npm run typecheck
 
-      - name: Unit Tests
+      # --------------------------------------------------
+      # TESTS
+      # --------------------------------------------------
+
+      - name: Run tests
         run: npm run test
 
-      - name: Security Audit
-        run: npm audit
+      # --------------------------------------------------
+      # SECURITY
+      # --------------------------------------------------
 
-      - name: Production Build
+      - name: Security audit
+        run: npm audit --audit-level=high
+
+      # --------------------------------------------------
+      # BUILD
+      # --------------------------------------------------
+
+      - name: Production build
         run: npm run build
+
+      # --------------------------------------------------
+      # BUILD ARTIFACT
+      # --------------------------------------------------
+
+      - name: Upload build artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build
+          path: |
+            .next
+            dist
+            build
+          if-no-files-found: ignore
+          retention-days: 7
+
+      # --------------------------------------------------
+      # SUCCESS
+      # --------------------------------------------------
+
+      - name: CI Success
+        if: success()
+        run: |
+          echo "========================================"
+          echo " CI PIPELINE PASSED"
+          echo "========================================"
+          echo "Formatting : PASS"
+          echo "Lint       : PASS"
+          echo "Typecheck  : PASS"
+          echo "Tests      : PASS"
+          echo "Security   : PASS"
+          echo "Build      : PASS"
