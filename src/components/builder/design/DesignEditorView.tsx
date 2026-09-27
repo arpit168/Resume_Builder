@@ -1,7 +1,7 @@
 "use client";
 
 import { useResume } from "@/hooks/useResume";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { DesignConfig } from "@/types/resume";
 import { DesignToolbar } from "./DesignToolbar";
 import { DesignCanvas } from "./DesignCanvas";
@@ -9,6 +9,15 @@ import { DesignSidebar } from "./DesignSidebar";
 import { DesignStyleInjector } from "./DesignStyleInjector";
 import { KeyboardShortcutsModal } from "./KeyboardShortcutsModal";
 import { CommandPalette, CommandItem } from "./CommandPalette";
+
+function isTypingContext(target: EventTarget | null): boolean {
+  if (!target) return false;
+  if (target instanceof HTMLInputElement) return true;
+  if (target instanceof HTMLTextAreaElement) return true;
+  if (target instanceof HTMLSelectElement) return true;
+  if (target instanceof HTMLElement && target.isContentEditable) return true;
+  return false;
+}
 
 function useDesignHistory(
   resumeId: string,
@@ -22,43 +31,45 @@ function useDesignHistory(
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
 
-  const syncState = () => {
+  const syncState = useCallback(() => {
     setCanUndo(currentIndexRef.current > 0);
     setCanRedo(currentIndexRef.current < historyRef.current.length - 1);
-  };
+  }, []);
 
-  const undo = () => {
+  const undo = useCallback(() => {
     if (currentIndexRef.current > 0) {
       currentIndexRef.current -= 1;
       isUndoRedoAction.current = true;
       updateDesign(resumeId, historyRef.current[currentIndexRef.current]);
-      syncState();
+      setCanUndo(currentIndexRef.current > 0);
+      setCanRedo(currentIndexRef.current < historyRef.current.length - 1);
     }
-  };
+  }, [resumeId, updateDesign]);
 
-  const redo = () => {
+  const redo = useCallback(() => {
     if (currentIndexRef.current < historyRef.current.length - 1) {
       currentIndexRef.current += 1;
       isUndoRedoAction.current = true;
       updateDesign(resumeId, historyRef.current[currentIndexRef.current]);
-      syncState();
+      setCanUndo(currentIndexRef.current > 0);
+      setCanRedo(currentIndexRef.current < historyRef.current.length - 1);
     }
-  };
+  }, [resumeId, updateDesign]);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     resetDesign(resumeId);
-  };
+  }, [resumeId, resetDesign]);
 
-  // Initialize
+  // Initialize history on first load
   useEffect(() => {
     if (historyRef.current.length === 0 && currentDesign) {
       historyRef.current = [JSON.parse(JSON.stringify(currentDesign))];
       currentIndexRef.current = 0;
       syncState();
     }
-  }, [currentDesign]);
+  }, [currentDesign, syncState]);
 
-  // Debounced save
+  // Debounced history snapshot — only records user-driven changes (not undo/redo)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -79,52 +90,31 @@ function useDesignHistory(
         lastSnapshot &&
         JSON.stringify(currentSnapshot) !== JSON.stringify(lastSnapshot)
       ) {
-        // truncate future
+        // Truncate any redo future when a new change is made
         historyRef.current = historyRef.current.slice(
           0,
           currentIndexRef.current + 1,
         );
         historyRef.current.push(currentSnapshot);
+        // Cap history at 50 entries to prevent memory bloat
+        if (historyRef.current.length > 50) {
+          historyRef.current = historyRef.current.slice(
+            historyRef.current.length - 50,
+          );
+        }
         currentIndexRef.current = historyRef.current.length - 1;
-        syncState();
+        setCanUndo(currentIndexRef.current > 0);
+        setCanRedo(false); // After a new action, no future to redo
       }
-    }, 500); // 500ms debounce ensures dragging only saves the final state
+    }, 500); // 500ms debounce ensures dragging only saves the final position
   }, [currentDesign]);
 
+  // Cleanup debounce timeout on unmount
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
-        return;
-      }
-
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
-        e.preventDefault();
-        // Undo
-        if (currentIndexRef.current > 0) {
-          currentIndexRef.current -= 1;
-          isUndoRedoAction.current = true;
-          updateDesign(resumeId, historyRef.current[currentIndexRef.current]);
-          syncState();
-        }
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
-        e.preventDefault();
-        // Redo
-        if (currentIndexRef.current < historyRef.current.length - 1) {
-          currentIndexRef.current += 1;
-          isUndoRedoAction.current = true;
-          updateDesign(resumeId, historyRef.current[currentIndexRef.current]);
-          syncState();
-        }
-      }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [resumeId, updateDesign]);
+  }, []);
 
   return { undo, redo, reset, canUndo, canRedo };
 }
@@ -132,10 +122,11 @@ function useDesignHistory(
 export function DesignEditorView({ resumeId }: { resumeId: string }) {
   const { resumes, isHydrated, updateDesign, resetDesign } = useResume();
   const [selectedSelector, setSelectedSelector] = useState<string | null>(null);
+  const [zoom, setZoom] = useState<number | null>(null); // null = auto-fit
 
   const resume = resumes.find((r) => r.id === resumeId);
 
-  // Hook up Undo/Redo design history unconditionally
+  // Hook up Undo/Redo design history unconditionally (rules of hooks)
   const history = useDesignHistory(
     resumeId,
     resume?.design,
@@ -146,32 +137,71 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
 
+  // Zoom handler exposed to DesignCanvas via ref/callback
+  const handleZoomChange = useCallback((newZoom: number | null) => {
+    setZoom(newZoom);
+  }, []);
+
   useEffect(() => {
     if (!resume) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Prevent triggering if typing in inputs
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        e.target instanceof HTMLSelectElement ||
-        (e.target as HTMLElement).isContentEditable
-      ) {
+      // Never steal input from typing contexts
+      if (isTypingContext(e.target)) return;
+
+      const ctrl = e.ctrlKey || e.metaKey;
+
+      // Undo: Ctrl+Z
+      if (ctrl && !e.shiftKey && e.key.toLowerCase() === "z") {
+        e.preventDefault();
+        history.undo();
         return;
       }
 
-      if (e.key === "?" || (e.ctrlKey && e.key === "/")) {
+      // Redo: Ctrl+Y or Ctrl+Shift+Z
+      if (
+        ctrl &&
+        (e.key.toLowerCase() === "y" ||
+          (e.shiftKey && e.key.toLowerCase() === "z"))
+      ) {
+        e.preventDefault();
+        history.redo();
+        return;
+      }
+
+      // Keyboard Shortcuts modal: ? or Ctrl+/
+      if (e.key === "?" || (ctrl && e.key === "/")) {
         e.preventDefault();
         setShowShortcuts(true);
+        return;
       }
 
-      if (e.ctrlKey && e.key.toLowerCase() === "k") {
+      // Command Palette: Ctrl+K
+      if (ctrl && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setShowCommandPalette(true);
+        return;
       }
 
-      // Global formatting overrides when an element is selected
-      if (e.ctrlKey && e.key.toLowerCase() === "b" && selectedSelector) {
+      // Zoom: Ctrl++ / Ctrl+= (zoom in), Ctrl+- (zoom out), Ctrl+0 (reset)
+      if (ctrl && (e.key === "+" || e.key === "=")) {
+        e.preventDefault();
+        setZoom((z) => Math.min(3, (z ?? 1) + 0.1));
+        return;
+      }
+      if (ctrl && e.key === "-") {
+        e.preventDefault();
+        setZoom((z) => Math.max(0.25, (z ?? 1) - 0.1));
+        return;
+      }
+      if (ctrl && e.key === "0") {
+        e.preventDefault();
+        setZoom(null); // null triggers auto-fit
+        return;
+      }
+
+      // Text formatting shortcuts (only when element selected)
+      if (ctrl && e.key.toLowerCase() === "b" && selectedSelector) {
         e.preventDefault();
         const currentW =
           resume.design?.elements?.[selectedSelector]?.fontWeight;
@@ -182,9 +212,10 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
             },
           },
         });
+        return;
       }
 
-      if (e.ctrlKey && e.key.toLowerCase() === "i" && selectedSelector) {
+      if (ctrl && e.key.toLowerCase() === "i" && selectedSelector) {
         e.preventDefault();
         const currentS = resume.design?.elements?.[selectedSelector]?.fontStyle;
         updateDesign(resume.id, {
@@ -194,9 +225,10 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
             },
           },
         });
+        return;
       }
 
-      if (e.ctrlKey && e.key.toLowerCase() === "u" && selectedSelector) {
+      if (ctrl && e.key.toLowerCase() === "u" && selectedSelector) {
         e.preventDefault();
         const currentDecor =
           resume.design?.elements?.[selectedSelector]?.textDecoration;
@@ -208,9 +240,10 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
             },
           },
         });
+        return;
       }
 
-      // Arrow key fine-movement
+      // Arrow key fine-movement (only when element selected)
       if (
         (e.key === "ArrowUp" ||
           e.key === "ArrowDown" ||
@@ -230,14 +263,13 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
 
         let dx = 0;
         let dy = 0;
-        const moveAmount = e.shiftKey ? 10 : 2; // Fine control (2px), or Shift for 10px
+        const moveAmount = e.shiftKey ? 10 : 2; // Fine (2px) or large (10px) nudge
 
         if (e.key === "ArrowUp") dy -= moveAmount;
         if (e.key === "ArrowDown") dy += moveAmount;
         if (e.key === "ArrowLeft") dx -= moveAmount;
         if (e.key === "ArrowRight") dx += moveAmount;
 
-        // Collision detection
         if (typeof document !== "undefined") {
           const el = document.querySelector(selectedSelector) as HTMLElement;
           if (el) {
@@ -252,30 +284,26 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
                 const totalDx = newX - painted.x;
                 const totalDy = newY - painted.y;
 
-                const isOverlapping = checkOverlap(
-                  el,
-                  totalDx,
-                  totalDy,
-                  "resume-preview-paper",
-                  scale,
-                );
-                if (isOverlapping) {
-                  // If it will overlap, don't move it
+                if (
+                  checkOverlap(
+                    el,
+                    totalDx,
+                    totalDy,
+                    "resume-preview-paper",
+                    scale,
+                  )
+                ) {
                   return;
                 }
 
-                // Proceed with move
                 updateDesign(resume.id, {
                   elements: {
-                    [selectedSelector]: {
-                      x: currentX + dx,
-                      y: currentY + dy,
-                    },
+                    [selectedSelector]: { x: newX, y: newY },
                   },
                 });
               },
             );
-            return; // We handle the update inside the promise
+            return;
           }
         }
 
@@ -288,18 +316,28 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
           },
         });
       }
+
+      // Escape — deselect element
+      if (e.key === "Escape" && selectedSelector) {
+        e.preventDefault();
+        setSelectedSelector(null);
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [resume, selectedSelector, updateDesign]);
+  }, [resume, selectedSelector, updateDesign, history]);
 
   const commands: CommandItem[] = [
     {
       id: "save",
       label: "Save Design",
       shortcut: "Ctrl+S",
-      action: () => alert("Design saved."),
+      action: () => {
+        // Design is auto-saved to localStorage via Zustand persist.
+        // Provide user feedback.
+        alert("Design saved automatically to your browser storage.");
+      },
     },
     { id: "undo", label: "Undo", shortcut: "Ctrl+Z", action: history.undo },
     { id: "redo", label: "Redo", shortcut: "Ctrl+Y", action: history.redo },
@@ -309,6 +347,30 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
       label: "Print / Export PDF",
       shortcut: "Ctrl+P",
       action: () => window.print(),
+    },
+    {
+      id: "zoom-in",
+      label: "Zoom In",
+      shortcut: "Ctrl++",
+      action: () => setZoom((z) => Math.min(3, (z ?? 1) + 0.1)),
+    },
+    {
+      id: "zoom-out",
+      label: "Zoom Out",
+      shortcut: "Ctrl+-",
+      action: () => setZoom((z) => Math.max(0.25, (z ?? 1) - 0.1)),
+    },
+    {
+      id: "zoom-reset",
+      label: "Fit to Screen",
+      shortcut: "Ctrl+0",
+      action: () => setZoom(null),
+    },
+    {
+      id: "deselect",
+      label: "Deselect Element",
+      shortcut: "Escape",
+      action: () => setSelectedSelector(null),
     },
   ];
 
@@ -334,7 +396,7 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
       />
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Panel (Optional themes/global settings) */}
+        {/* Left Panel (Global settings) */}
         <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 hidden md:flex flex-col p-4 shrink-0 overflow-y-auto">
           <h2 className="font-bold text-gray-900 dark:text-white mb-4">
             Design Editor
@@ -346,12 +408,52 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
 
           <div className="mt-8 border-t border-gray-200 dark:border-gray-800 pt-6">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-3 text-sm">
-              Global Settings
+              Shortcuts
             </h3>
-            {/* Future global settings like paper size, global typography */}
-            <p className="text-xs text-gray-500 italic">
-              Select an element on the canvas to begin.
-            </p>
+            <ul className="text-xs text-gray-500 space-y-1.5">
+              <li>
+                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                  Click
+                </kbd>{" "}
+                Select element
+              </li>
+              <li>
+                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                  Esc
+                </kbd>{" "}
+                Deselect
+              </li>
+              <li>
+                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                  Arrow keys
+                </kbd>{" "}
+                Nudge 2px
+              </li>
+              <li>
+                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                  Shift+Arrow
+                </kbd>{" "}
+                Nudge 10px
+              </li>
+              <li>
+                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                  Ctrl+Z
+                </kbd>{" "}
+                Undo
+              </li>
+              <li>
+                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                  Ctrl+Y
+                </kbd>{" "}
+                Redo
+              </li>
+              <li>
+                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                  ?
+                </kbd>{" "}
+                All shortcuts
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -361,6 +463,9 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
             resume={resume}
             selectedSelector={selectedSelector}
             onSelect={setSelectedSelector}
+            externalZoom={zoom}
+            onZoomChange={handleZoomChange}
+            onOpenShortcuts={() => setShowShortcuts(true)}
           />
         </div>
 

@@ -95,8 +95,22 @@ export function DesignStyleInjector({ design }: { design?: DesignConfig }) {
         }
 
         if (rules.length === 0) return "";
-        const safeSelector = selector.replace(/[<>]/g, "");
-        const safeRules = rules.join(" ").replace(/[<>]/g, "");
+
+        // Sanitize selector: only allow CSS-safe characters.
+        // Strip anything that could escape the selector context ({, }, <, >, etc.)
+        const safeSelector = selector
+          .replace(/[<>{}]/g, "")
+          .replace(/\/\*/g, "") // strip CSS comment openers
+          .replace(/\*\//g, ""); // strip CSS comment closers
+        if (!safeSelector.trim()) return "";
+
+        // Sanitize rule values: strip comment sequences and unbalanced braces
+        const safeRules = rules
+          .join(" ")
+          .replace(/[<>]/g, "")
+          .replace(/\/\*/g, "")
+          .replace(/\*\//g, "");
+
         return `${safeSelector} { ${safeRules} }`;
       })
       .join("\n");

@@ -58,6 +58,24 @@ export function ResumeToolbar({
   const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate file size (max 5MB — a resume JSON should never be this large)
+    const MAX_SIZE_BYTES = 5 * 1024 * 1024;
+    if (file.size > MAX_SIZE_BYTES) {
+      alert(
+        "File is too large. Please import a valid resume JSON file (max 5MB).",
+      );
+      e.target.value = "";
+      return;
+    }
+
+    // Validate file type
+    if (!file.name.endsWith(".json") && file.type !== "application/json") {
+      alert("Invalid file type. Please import a .json file.");
+      e.target.value = "";
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
@@ -101,11 +119,19 @@ export function ResumeToolbar({
           });
           alert("Resume imported successfully!");
         } else {
-          alert("Invalid resume format.");
+          alert(
+            "Invalid resume format. The file does not appear to be a valid HireCraft resume backup.",
+          );
         }
       } catch {
-        alert("Failed to parse file.");
+        alert(
+          "Failed to parse the file. Please ensure it is a valid JSON file.",
+        );
       }
+      e.target.value = "";
+    };
+    reader.onerror = () => {
+      alert("Unable to read the file. Please try again.");
       e.target.value = "";
     };
     reader.readAsText(file);

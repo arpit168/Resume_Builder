@@ -2,7 +2,7 @@
 
 import { Resume } from "@/types/resume";
 import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { getUniqueSelector } from "@/utils/design";
 import { useResume } from "@/hooks/useResume";
 import { ZoomIn, ZoomOut, Maximize, Keyboard } from "lucide-react";
@@ -11,17 +11,30 @@ export function DesignCanvas({
   resume,
   selectedSelector,
   onSelect,
+  externalZoom,
+  onZoomChange,
+  onOpenShortcuts,
 }: {
   resume: Resume;
   selectedSelector: string | null;
   onSelect: (selector: string | null) => void;
+  externalZoom?: number | null;
+  onZoomChange?: (zoom: number | null) => void;
+  onOpenShortcuts?: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  const [autoScale, setAutoScale] = useState(1);
   const [paperHeight, setPaperHeight] = useState(1123);
   const { updateDesign } = useResume();
-  const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(false);
+  const [isDraggingState, setIsDraggingState] = useState(false);
+
+  // Use external zoom if provided, otherwise auto-fit
+  const scale =
+    externalZoom !== null && externalZoom !== undefined
+      ? externalZoom
+      : autoScale;
 
   // Overlay state
   const [overlayRect, setOverlayRect] = useState<{
@@ -32,21 +45,30 @@ export function DesignCanvas({
   } | null>(null);
 
   // Auto-fit scale
-  const fitToScreen = () => {
+  const fitToScreen = useCallback(() => {
     if (containerRef.current) {
       const availableWidth = containerRef.current.clientWidth - 128;
       const A4_WIDTH = 794;
-      setScale(Math.min(availableWidth / A4_WIDTH, 1.5));
+      const newScale = Math.min(availableWidth / A4_WIDTH, 1.5);
+      setAutoScale(newScale);
+      // If using auto-fit mode, also notify parent
+      if (
+        onZoomChange &&
+        (externalZoom === null || externalZoom === undefined)
+      ) {
+        // Just update internal, the parent holds null = auto-fit
+      }
     }
-  };
+  }, [externalZoom, onZoomChange]);
 
   useEffect(() => {
     fitToScreen();
     const observer = new ResizeObserver(fitToScreen);
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [fitToScreen]);
 
+  // Track paper height — only re-attach observer when paperRef changes, not on every resume update
   useEffect(() => {
     if (!paperRef.current) return;
     const observer = new ResizeObserver((entries) => {
@@ -56,7 +78,7 @@ export function DesignCanvas({
     });
     observer.observe(paperRef.current);
     return () => observer.disconnect();
-  }, [resume]);
+  }, []); // intentionally empty — paperRef.current is stable after mount
 
   // Update overlay rect based on selected selector
   useEffect(() => {
@@ -71,8 +93,6 @@ export function DesignCanvas({
         const paperRect = paperRef.current.getBoundingClientRect();
         const elRect = el.getBoundingClientRect();
 
-        // Calculate relative to unscaled paper coordinates
-        // The paper is scaled using transform: scale()
         setOverlayRect({
           top: (elRect.top - paperRect.top) / scale,
           left: (elRect.left - paperRect.left) / scale,
@@ -85,17 +105,18 @@ export function DesignCanvas({
     };
 
     updateRect();
-    const interval = setInterval(updateRect, 100); // Polling for robust updates during animations
+    // Poll for robust updates after design changes / animations
+    const interval = setInterval(updateRect, 100);
     return () => clearInterval(interval);
   }, [selectedSelector, scale, resume.design]);
 
   const handleCanvasClick = (e: React.MouseEvent) => {
-    // If the user clicked a link (or something inside a link), prevent navigation
+    // Prevent link navigation in the editor
     if ((e.target as HTMLElement).closest("a")) {
       e.preventDefault();
     }
 
-    if (isDragging) return;
+    if (isDraggingRef.current) return;
 
     // Triple click selects the entire page (root wrapper)
     if (e.detail === 3) {
@@ -103,15 +124,15 @@ export function DesignCanvas({
       return;
     }
 
-    // Double click releases (deselects) the element
+    // Double click deselects
     if (e.detail === 2) {
       onSelect(null);
       return;
     }
 
-    // Find clicked element inside paper
     const target = e.target as HTMLElement;
 
+    // Don't allow selecting QR code elements
     if (target.closest('[data-element="qr-code"]')) {
       onSelect(null);
       return;
@@ -130,13 +151,13 @@ export function DesignCanvas({
     }
   };
 
-  // Dragging logic
+  // Dragging logic — uses refs to avoid stale closures, cleans up properly
   const handlePointerDown = (e: React.PointerEvent) => {
     if (!selectedSelector) return;
 
-    // Prevent default to stop text selection and native dragging which can scroll the page
     e.preventDefault();
-    setIsDragging(true);
+    isDraggingRef.current = true;
+    setIsDraggingState(true);
     e.currentTarget.setPointerCapture(e.pointerId);
 
     const startX = e.clientX;
@@ -148,29 +169,35 @@ export function DesignCanvas({
 
     const el = document.querySelector(selectedSelector) as HTMLElement;
     if (!el || !paperRef.current) {
-      setIsDragging(false);
+      isDraggingRef.current = false;
+      setIsDraggingState(false);
       return;
     }
 
     if (el.closest('[data-element="qr-code"]')) {
-      setIsDragging(false);
+      isDraggingRef.current = false;
+      setIsDraggingState(false);
       return;
     }
 
     const paperRect = paperRef.current.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
 
-    // Calculate maximum allowable drag distances in unscaled coordinates
+    // Boundaries in unscaled coordinates
     const minDx = -(elRect.left - paperRect.left) / scale;
     const maxDx = (paperRect.right - elRect.right) / scale;
     const minDy = -(elRect.top - paperRect.top) / scale;
     const maxDy = (paperRect.bottom - elRect.bottom) / scale;
 
-    const onPointerMove = (moveEvent: PointerEvent) => {
-      let dx = (moveEvent.clientX - startX) / scale;
-      let dy = (moveEvent.clientY - startY) / scale;
+    const currentScale = scale; // capture scale at drag start to avoid stale closures
+    const currentSelectedSelector = selectedSelector; // capture to avoid stale ref
+    const currentResumeId = resume.id;
 
-      // Clamp to ensure the element doesn't cross the paper boundaries
+    const onPointerMove = (moveEvent: PointerEvent) => {
+      let dx = (moveEvent.clientX - startX) / currentScale;
+      let dy = (moveEvent.clientY - startY) / currentScale;
+
+      // Clamp to paper boundaries
       dx = Math.max(minDx, Math.min(maxDx, dx));
       dy = Math.max(minDy, Math.min(maxDy, dy));
 
@@ -183,12 +210,20 @@ export function DesignCanvas({
           const totalDx = newX - painted.x;
           const totalDy = newY - painted.y;
 
-          if (checkOverlap(el, totalDx, totalDy, "resume-preview-paper", scale))
+          if (
+            checkOverlap(
+              el,
+              totalDx,
+              totalDy,
+              "resume-preview-paper",
+              currentScale,
+            )
+          )
             return;
 
-          updateDesign(resume.id, {
+          updateDesign(currentResumeId, {
             elements: {
-              [selectedSelector]: {
+              [currentSelectedSelector]: {
                 ...initialDesign,
                 x: newX,
                 y: newY,
@@ -199,15 +234,29 @@ export function DesignCanvas({
       );
     };
 
-    const onPointerUp = () => {
-      setTimeout(() => setIsDragging(false), 50); // delay to prevent click firing
+    const cleanup = () => {
+      isDraggingRef.current = false;
+      // Small delay to prevent click from firing immediately after drag ends
+      setTimeout(() => setIsDraggingState(false), 50);
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointerup", cleanup);
+      window.removeEventListener("pointercancel", cleanup);
     };
 
     window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointerup", cleanup);
+    // Also handle pointer cancel (e.g. touch interrupted, alt+tab)
+    window.addEventListener("pointercancel", cleanup);
   };
+
+  const isQRSelected =
+    selectedSelector && typeof document !== "undefined"
+      ? Boolean(
+          document
+            .querySelector(selectedSelector)
+            ?.closest('[data-element="qr-code"]'),
+        )
+      : false;
 
   return (
     <div className="flex-1 flex flex-col relative h-full">
@@ -237,8 +286,6 @@ export function DesignCanvas({
             className="absolute top-0 left-0 bg-white shadow-2xl flex flex-col text-gray-900 cursor-crosshair overflow-hidden"
             id="resume-preview-paper"
           >
-            {/* The resume template renders here */}
-            {/* Because of DesignStyleInjector in the parent, overrides will be applied via CSS! */}
             <TemplateRenderer resume={resume} />
 
             {/* Selection Overlay */}
@@ -253,48 +300,48 @@ export function DesignCanvas({
                   height: overlayRect.height,
                   border: "2px solid #3b82f6",
                   backgroundColor: "rgba(59, 130, 246, 0.1)",
-                  cursor: isDragging
+                  cursor: isDraggingState
                     ? "grabbing"
-                    : document
-                          .querySelector(selectedSelector)
-                          ?.closest('[data-element="qr-code"]')
+                    : isQRSelected
                       ? "not-allowed"
                       : "grab",
                   zIndex: 50,
                   pointerEvents: "auto",
-                  touchAction: "none", // Prevents page from scrolling on touch devices while dragging
+                  touchAction: "none",
                 }}
                 className="transition-all duration-75"
               >
                 {/* Drag Handle Label */}
                 <div className="absolute -top-6 -left-0.5 bg-blue-600 text-white text-[10px] px-2 py-1 rounded-t-md rounded-br-md font-medium shadow-sm whitespace-nowrap">
-                  {document
-                    .querySelector(selectedSelector)
-                    ?.closest('[data-element="qr-code"]')
-                    ? "Locked (QR Code)"
-                    : "Selected Element"}
+                  {isQRSelected ? "Locked (QR Code)" : "Selected Element"}
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
       {/* Floating Canvas Controls */}
       <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-1.5 z-20">
+        {/* Keyboard Shortcuts — calls parent handler directly instead of dispatching fake KeyboardEvent */}
         <button
-          onClick={() =>
-            window.dispatchEvent(new KeyboardEvent("keydown", { key: "?" }))
-          }
+          onClick={() => onOpenShortcuts?.()}
           className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-lg transition-colors"
           title="Keyboard Shortcuts (?)"
+          aria-label="Open keyboard shortcuts"
         >
           <Keyboard className="w-4 h-4" />
         </button>
-        <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1"></div>
+        <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1" />
         <button
-          onClick={() => setScale((s) => Math.max(0.25, s - 0.1))}
+          onClick={() => {
+            const newZoom = Math.max(0.25, scale - 0.1);
+            onZoomChange?.(newZoom);
+            if (!onZoomChange) setAutoScale(newZoom);
+          }}
           className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-lg transition-colors"
           title="Zoom Out (Ctrl -)"
+          aria-label="Zoom out"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
@@ -302,17 +349,26 @@ export function DesignCanvas({
           {Math.round(scale * 100)}%
         </span>
         <button
-          onClick={() => setScale((s) => Math.min(3, s + 0.1))}
+          onClick={() => {
+            const newZoom = Math.min(3, scale + 0.1);
+            onZoomChange?.(newZoom);
+            if (!onZoomChange) setAutoScale(newZoom);
+          }}
           className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-lg transition-colors"
           title="Zoom In (Ctrl +)"
+          aria-label="Zoom in"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
-        <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1"></div>
+        <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-1" />
         <button
-          onClick={fitToScreen}
+          onClick={() => {
+            onZoomChange?.(null); // null = restore auto-fit
+            fitToScreen();
+          }}
           className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-400 dark:hover:text-blue-400 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-          title="Fit to Screen"
+          title="Fit to Screen (Ctrl+0)"
+          aria-label="Fit to screen"
         >
           <Maximize className="w-4 h-4" />
         </button>
