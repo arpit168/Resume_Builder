@@ -66,15 +66,15 @@ export function ModernTemplate({
       <div
         className={`p-8 ${colors.bg} text-white flex justify-between items-center`}
       >
-        <div className="flex-1">
+        <div className="flex-1 min-w-0 pr-4">
           <h1 className="text-4xl font-bold uppercase tracking-wider break-words">
             {data.personalInfo.fullName || "Your Name"}
           </h1>
-          <h2 className="text-xl mt-2 font-medium opacity-90 tracking-wide">
+          <h2 className="text-xl mt-2 font-medium opacity-90 tracking-wide break-words">
             {data.personalInfo.jobTitle || "Your Title"}
           </h2>
         </div>
-        <div className="flex flex-col gap-1.5 text-sm text-right opacity-90 shrink-0">
+        <div className="flex flex-col gap-1.5 text-sm text-right opacity-90 shrink-0 max-w-xs break-all">
           {data.personalInfo.email && (
             <div className="flex items-center justify-end gap-2">
               <Mail className="w-4 h-4" />{" "}
@@ -280,7 +280,10 @@ export function ModernTemplate({
         <div className="w-1/3 flex flex-col gap-6">
           {data.personalInfo.portfolio && (
             <section className="flex flex-col items-center mb-2">
-              <div className="bg-white p-1 rounded shadow-sm border border-gray-200">
+              <div
+                data-element="qr-code"
+                className="bg-white p-1 rounded shadow-sm border border-gray-200"
+              >
                 <a
                   href={
                     data.personalInfo.portfolio.startsWith("http")

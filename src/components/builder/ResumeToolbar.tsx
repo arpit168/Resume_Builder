@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import React, { useState, useRef } from "react";
 import Link from "next/link";
+import { getSafeFontCss } from "@/lib/pdf/inlineStyles";
 
 const TEMPLATES: ResumeTemplate[] = [
   "modern",
@@ -66,8 +67,35 @@ export function ResumeToolbar({
           importedData.data &&
           importedData.data.personalInfo
         ) {
+          const safeData = {
+            ...importedData.data,
+            experience: Array.isArray(importedData.data.experience)
+              ? importedData.data.experience
+              : [],
+            education: Array.isArray(importedData.data.education)
+              ? importedData.data.education
+              : [],
+            skills: Array.isArray(importedData.data.skills)
+              ? importedData.data.skills
+              : [],
+            projects: Array.isArray(importedData.data.projects)
+              ? importedData.data.projects
+              : [],
+            certifications: Array.isArray(importedData.data.certifications)
+              ? importedData.data.certifications
+              : [],
+            languages: Array.isArray(importedData.data.languages)
+              ? importedData.data.languages
+              : [],
+            achievements: Array.isArray(importedData.data.achievements)
+              ? importedData.data.achievements
+              : [],
+            customSections: Array.isArray(importedData.data.customSections)
+              ? importedData.data.customSections
+              : [],
+          };
           updateResume(resume.id, {
-            data: importedData.data,
+            data: safeData,
             template: importedData.template || resume.template,
             colorTheme: importedData.colorTheme || resume.colorTheme,
           });
@@ -98,13 +126,23 @@ export function ResumeToolbar({
 
       await new Promise((resolve) => setTimeout(resolve, 100));
 
+      const safeFontCss = getSafeFontCss();
+
       const sourceCanvas = await toCanvas(element, {
         quality: 0.98,
         backgroundColor: "#ffffff",
         pixelRatio: 2,
+        fontEmbedCSS: safeFontCss,
       });
 
       element.style.transform = originalTransform;
+
+      const a4WidthMm = 210;
+      const a4HeightMm = 297;
+      const pxPerMm = sourceCanvas.width / a4WidthMm;
+
+      const bottomMarginMm = 10;
+      const topMarginMm = 10; // For page 2+
 
       const pdf = new jsPDF({
         orientation: "portrait",
@@ -112,36 +150,73 @@ export function ResumeToolbar({
         format: "a4",
       });
 
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const pxPerMm = sourceCanvas.width / pdfWidth;
-      const pxPerPage = pageHeight * pxPerMm;
-      const paddingMm = 15;
-      const pxPerPadding = paddingMm * pxPerMm;
-
+      const ctx = sourceCanvas.getContext("2d");
       let yOffset = 0;
-      let isFirstPage = true;
+      let pageNum = 1;
+      const sliceHeights: number[] = [];
+
+      const findSafeSliceY = (startY: number, targetY: number) => {
+        if (!ctx) return targetY;
+        const scanLimit = Math.max(startY, targetY - 800);
+        const heightToScan = targetY - scanLimit;
+        if (heightToScan <= 0) return targetY;
+
+        const imgData = ctx.getImageData(
+          0,
+          scanLimit,
+          sourceCanvas.width,
+          heightToScan,
+        );
+        const data = imgData.data;
+        const rowBytes = sourceCanvas.width * 4;
+
+        const rowsAreIdentical = (r1: number, r2: number) => {
+          const o1 = r1 * rowBytes;
+          const o2 = r2 * rowBytes;
+          for (let i = 0; i < rowBytes; i++) {
+            if (data[o1 + i] !== data[o2 + i]) return false;
+          }
+          return true;
+        };
+
+        let identicalCount = 0;
+        for (let y = heightToScan - 1; y > 0; y--) {
+          if (rowsAreIdentical(y, y - 1)) {
+            identicalCount++;
+            if (identicalCount >= 15) {
+              return scanLimit + y + 7; // Return middle of gap
+            }
+          } else {
+            identicalCount = 0;
+          }
+        }
+        return targetY;
+      };
 
       while (yOffset < sourceCanvas.height) {
-        if (!isFirstPage) pdf.addPage();
+        if (pageNum > 1) pdf.addPage();
 
-        const currentPaddingPx = isFirstPage ? 0 : pxPerPadding;
-        const availablePx = pxPerPage - currentPaddingPx;
-        const sliceHeight = Math.min(
-          availablePx,
-          sourceCanvas.height - yOffset,
-        );
+        const currentTopMarginMm = pageNum > 1 ? topMarginMm : 0;
+        const availableHeightMm =
+          a4HeightMm - currentTopMarginMm - bottomMarginMm;
+        const maxSlicePx = availableHeightMm * pxPerMm;
+
+        let sliceHeight = Math.min(maxSlicePx, sourceCanvas.height - yOffset);
+
+        if (yOffset + sliceHeight < sourceCanvas.height) {
+          const safeY = findSafeSliceY(yOffset, yOffset + sliceHeight);
+          sliceHeight = safeY - yOffset;
+        }
 
         const sliceCanvas = document.createElement("canvas");
         sliceCanvas.width = sourceCanvas.width;
         sliceCanvas.height = sliceHeight;
-        const ctx = sliceCanvas.getContext("2d");
+        const sCtx = sliceCanvas.getContext("2d");
 
-        if (ctx) {
-          ctx.fillStyle = "#ffffff";
-          ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
-          ctx.drawImage(
+        if (sCtx) {
+          sCtx.fillStyle = "#ffffff";
+          sCtx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
+          sCtx.drawImage(
             sourceCanvas,
             0,
             yOffset,
@@ -155,18 +230,26 @@ export function ResumeToolbar({
         }
 
         const sliceData = sliceCanvas.toDataURL("image/jpeg", 0.98);
-        const yPos = isFirstPage ? 0 : paddingMm;
-        const printHeight = sliceHeight / pxPerMm;
+        const printHeightMm = sliceHeight / pxPerMm;
 
-        pdf.addImage(sliceData, "JPEG", 0, yPos, pdfWidth, printHeight);
+        pdf.addImage(
+          sliceData,
+          "JPEG",
+          0,
+          currentTopMarginMm,
+          a4WidthMm,
+          printHeightMm,
+        );
 
+        sliceHeights.push(sliceHeight);
         yOffset += sliceHeight;
-        isFirstPage = false;
+        pageNum++;
       }
 
       // Add clickable links programmatically
       const links = element.querySelectorAll("a");
       const elementRect = element.getBoundingClientRect();
+      const pxRatio = sourceCanvas.width / elementRect.width;
 
       links.forEach((link) => {
         const href = link.getAttribute("href");
@@ -174,36 +257,42 @@ export function ResumeToolbar({
 
         const rect = link.getBoundingClientRect();
 
-        // Calculate position relative to the resume container
         const relX = rect.left - elementRect.left;
         const relY = rect.top - elementRect.top;
         const relW = rect.width;
         const relH = rect.height;
 
-        // Convert px coordinates to PDF mm coordinates
-        const mmX = (relX * pdfWidth) / elementRect.width;
-        let mmY = (relY * pdfWidth) / elementRect.width;
-        const mmW = (relW * pdfWidth) / elementRect.width;
-        const mmH = (relH * pdfWidth) / elementRect.width;
+        const canvasX = relX * pxRatio;
+        const canvasY = relY * pxRatio;
+        const canvasW = relW * pxRatio;
+        const canvasH = relH * pxRatio;
 
-        // Determine which page the link belongs to based on the slicing logic
-        let pageNum = 1;
-        if (mmY > pageHeight) {
-          mmY -= pageHeight;
-          pageNum++;
+        let pNum = 1;
+        let currentSliceY = 0;
+        let pageSliceHeight = sliceHeights[0];
 
-          const availableHeight = pageHeight - paddingMm;
-          while (mmY > availableHeight) {
-            mmY -= availableHeight;
-            pageNum++;
-          }
-          // Add top padding offset for pages > 1
-          mmY += paddingMm;
+        while (
+          pNum <= sliceHeights.length &&
+          canvasY >= currentSliceY + pageSliceHeight
+        ) {
+          currentSliceY += pageSliceHeight;
+          pNum++;
+          pageSliceHeight = sliceHeights[pNum - 1];
         }
 
-        pdf.setPage(pageNum);
-        // Using linkWithText isn't needed, pdf.link creates an invisible clickable area
-        pdf.link(mmX, mmY, mmW, mmH, { url: href });
+        if (pNum <= sliceHeights.length) {
+          const yOnPageCanvas = canvasY - currentSliceY;
+
+          const pageTopMarginMm = pNum > 1 ? topMarginMm : 0;
+
+          const mmX = canvasX / pxPerMm;
+          const mmY = yOnPageCanvas / pxPerMm + pageTopMarginMm;
+          const mmW = canvasW / pxPerMm;
+          const mmH = canvasH / pxPerMm;
+
+          pdf.setPage(pNum);
+          pdf.link(mmX, mmY, mmW, mmH, { url: href });
+        }
       });
 
       pdf.save(

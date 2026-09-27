@@ -12,15 +12,15 @@ export function InitialLoaderWrapper({
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
-    // Start fading out after 2.5 seconds
+    // Start fading out after 0.5 seconds
     const fadeTimer = setTimeout(() => {
       setIsFading(true);
-    }, 2500);
+    }, 500);
 
-    // Completely remove the splash screen from DOM after 3 seconds
+    // Completely remove the splash screen from DOM after 1 second
     const removeTimer = setTimeout(() => {
       setShowSplash(false);
-    }, 3000);
+    }, 1000);
 
     return () => {
       clearTimeout(fadeTimer);

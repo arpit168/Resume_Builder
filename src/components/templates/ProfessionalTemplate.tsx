@@ -166,7 +166,10 @@ export function ProfessionalTemplate({
         </div>
 
         {qrUrl && (
-          <div className="absolute top-0 right-0 p-1 border border-gray-200 bg-white shadow-sm">
+          <div
+            data-element="qr-code"
+            className="absolute top-0 right-0 p-1 border border-gray-200 bg-white shadow-sm"
+          >
             <a
               href={qrUrl.startsWith("http") ? qrUrl : `https://${qrUrl}`}
               target="_blank"

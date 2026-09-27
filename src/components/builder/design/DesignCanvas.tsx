@@ -111,6 +111,12 @@ export function DesignCanvas({
 
     // Find clicked element inside paper
     const target = e.target as HTMLElement;
+
+    if (target.closest('[data-element="qr-code"]')) {
+      onSelect(null);
+      return;
+    }
+
     if (target.id === "resume-preview-paper" || target === paperRef.current) {
       onSelect(null);
       return;
@@ -146,6 +152,11 @@ export function DesignCanvas({
       return;
     }
 
+    if (el.closest('[data-element="qr-code"]')) {
+      setIsDragging(false);
+      return;
+    }
+
     const paperRect = paperRef.current.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
 
@@ -163,15 +174,29 @@ export function DesignCanvas({
       dx = Math.max(minDx, Math.min(maxDx, dx));
       dy = Math.max(minDy, Math.min(maxDy, dy));
 
-      updateDesign(resume.id, {
-        elements: {
-          [selectedSelector]: {
-            ...initialDesign,
-            x: initialTransformX + dx,
-            y: initialTransformY + dy,
-          },
+      const newX = initialTransformX + dx;
+      const newY = initialTransformY + dy;
+
+      import("../../../utils/design").then(
+        ({ checkOverlap, getPaintedTransform }) => {
+          const painted = getPaintedTransform(el);
+          const totalDx = newX - painted.x;
+          const totalDy = newY - painted.y;
+
+          if (checkOverlap(el, totalDx, totalDy, "resume-preview-paper", scale))
+            return;
+
+          updateDesign(resume.id, {
+            elements: {
+              [selectedSelector]: {
+                ...initialDesign,
+                x: newX,
+                y: newY,
+              },
+            },
+          });
         },
-      });
+      );
     };
 
     const onPointerUp = () => {
@@ -186,33 +211,6 @@ export function DesignCanvas({
 
   return (
     <div className="flex-1 flex flex-col relative h-full">
-      {/* Zoom Controls Overlay */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-white dark:bg-gray-800 shadow-lg rounded-full px-4 py-2 border border-gray-200 dark:border-gray-700">
-        <button
-          onClick={() => setScale((s) => Math.max(0.3, s - 0.1))}
-          className="p-1 hover:text-blue-600 transition-colors"
-        >
-          <ZoomOut className="w-4 h-4" />
-        </button>
-        <span className="text-xs font-medium w-12 text-center">
-          {Math.round(scale * 100)}%
-        </span>
-        <button
-          onClick={() => setScale((s) => Math.min(2, s + 0.1))}
-          className="p-1 hover:text-blue-600 transition-colors"
-        >
-          <ZoomIn className="w-4 h-4" />
-        </button>
-        <div className="w-px h-4 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-        <button
-          onClick={fitToScreen}
-          className="p-1 hover:text-blue-600 transition-colors"
-          title="Fit to screen"
-        >
-          <Maximize className="w-4 h-4" />
-        </button>
-      </div>
-
       <div
         ref={containerRef}
         className="flex-1 overflow-auto flex justify-center pb-24 relative"
@@ -255,7 +253,13 @@ export function DesignCanvas({
                   height: overlayRect.height,
                   border: "2px solid #3b82f6",
                   backgroundColor: "rgba(59, 130, 246, 0.1)",
-                  cursor: isDragging ? "grabbing" : "grab",
+                  cursor: isDragging
+                    ? "grabbing"
+                    : document
+                          .querySelector(selectedSelector)
+                          ?.closest('[data-element="qr-code"]')
+                      ? "not-allowed"
+                      : "grab",
                   zIndex: 50,
                   pointerEvents: "auto",
                   touchAction: "none", // Prevents page from scrolling on touch devices while dragging
@@ -264,7 +268,11 @@ export function DesignCanvas({
               >
                 {/* Drag Handle Label */}
                 <div className="absolute -top-6 -left-0.5 bg-blue-600 text-white text-[10px] px-2 py-1 rounded-t-md rounded-br-md font-medium shadow-sm whitespace-nowrap">
-                  Selected Element
+                  {document
+                    .querySelector(selectedSelector)
+                    ?.closest('[data-element="qr-code"]')
+                    ? "Locked (QR Code)"
+                    : "Selected Element"}
                 </div>
               </div>
             )}

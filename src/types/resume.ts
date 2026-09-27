@@ -115,7 +115,6 @@ export interface ElementDesign {
   opacity?: string | number;
   boxShadow?: string;
   textDecoration?: string;
-  zIndex?: number;
   visibility?: string;
   display?: string;
   flexDirection?: string;

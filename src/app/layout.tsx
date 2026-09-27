@@ -35,6 +35,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
+      <head></head>
       <body className="min-h-screen flex flex-col font-sans antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
         <script
           dangerouslySetInnerHTML={{

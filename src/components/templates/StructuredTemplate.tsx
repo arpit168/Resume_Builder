@@ -67,12 +67,12 @@ export function StructuredTemplate({
           </div>
         )}
 
-        <div className="flex flex-col flex-1">
-          <h1 className={`text-3xl font-bold mb-2 ${colors.text}`}>
+        <div className="flex flex-col flex-1 min-w-0 pr-32">
+          <h1 className={`text-3xl font-bold mb-2 break-words ${colors.text}`}>
             {data.personalInfo.fullName || "Your Name"}
           </h1>
 
-          <div className="text-[10px] text-gray-800 font-medium leading-relaxed max-w-2xl">
+          <div className="text-[10px] text-gray-800 font-medium leading-relaxed max-w-2xl break-words">
             {data.personalInfo.jobTitle && (
               <>
                 <strong className="text-gray-900">Title:</strong>{" "}
@@ -147,7 +147,10 @@ export function StructuredTemplate({
           </div>
         </div>
         {data.personalInfo.portfolio && (
-          <div className="absolute top-12 right-12 flex flex-col items-end">
+          <div
+            data-element="qr-code"
+            className="absolute top-12 right-12 flex flex-col items-end"
+          >
             <div>
               <a
                 href={
