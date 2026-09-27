@@ -1,55 +1,62 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, Monitor } from "lucide-react";
+
+const TOTAL_SECONDS = 7;
+const ENABLE_CLOSE_AFTER_MS = 2000;
 
 export function ScreenWarningModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [canClose, setCanClose] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(7);
+  const [timeLeft, setTimeLeft] = useState(TOTAL_SECONDS);
   const [isPaused, setIsPaused] = useState(false);
+
+  // Use a ref for isPaused so the countdown interval can read it without re-creating
+  const isPausedRef = useRef(false);
 
   useEffect(() => {
     // Only show on first visit per session
     const hasSeen = sessionStorage.getItem("hasSeenScreenWarning");
     if (!hasSeen) {
-      setTimeout(() => setIsOpen(true), 100);
       sessionStorage.setItem("hasSeenScreenWarning", "true");
+      setTimeout(() => setIsOpen(true), 100);
     }
   }, []);
 
   useEffect(() => {
     if (!isOpen) return;
 
-    // Enable close button after 2 seconds (independent of pause)
+    // Enable close button after ENABLE_CLOSE_AFTER_MS
     const enableCloseTimer = setTimeout(() => {
       setCanClose(true);
-    }, 2000);
+    }, ENABLE_CLOSE_AFTER_MS);
 
     return () => clearTimeout(enableCloseTimer);
   }, [isOpen]);
 
+  // Single stable countdown — reads isPaused via ref to avoid recreating every second
   useEffect(() => {
-    if (!isOpen || isPaused) return;
+    if (!isOpen) return;
 
-    // Auto close after remaining time
-    const autoCloseTimer = setTimeout(() => {
-      setIsOpen(false);
-    }, timeLeft * 1000);
-
-    // Countdown timer for display
     const countdownInterval = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      if (isPausedRef.current) return; // skip tick while paused
+
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          setIsOpen(false);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
 
-    return () => {
-      clearTimeout(autoCloseTimer);
-      clearInterval(countdownInterval);
-    };
-  }, [isOpen, isPaused, timeLeft]);
+    return () => clearInterval(countdownInterval);
+  }, [isOpen]); // runs once when modal opens, stable from then on
 
   const handleInteraction = () => {
     if (!isPaused) {
+      isPausedRef.current = true;
       setIsPaused(true);
     }
   };
@@ -80,6 +87,9 @@ export function ScreenWarningModal() {
           <button
             onClick={() => canClose && setIsOpen(false)}
             disabled={!canClose}
+            aria-label={
+              canClose ? "Continue to app" : `Please wait ${timeLeft} seconds`
+            }
             className={`w-full py-3 px-4 rounded-xl font-semibold transition-all flex justify-center items-center gap-2 ${
               canClose
                 ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25"
@@ -97,13 +107,13 @@ export function ScreenWarningModal() {
           </button>
         </div>
 
-        {/* Progress bar line at bottom */}
+        {/* Progress bar */}
         {!isPaused && (
           <div className="h-1 w-full bg-gray-100 dark:bg-gray-800">
             <div
               className="h-full bg-blue-600 transition-all duration-1000 ease-linear"
-              style={{ width: `${(timeLeft / 7) * 100}%` }}
-            ></div>
+              style={{ width: `${(timeLeft / TOTAL_SECONDS) * 100}%` }}
+            />
           </div>
         )}
       </div>

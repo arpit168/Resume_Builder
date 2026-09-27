@@ -17,6 +17,7 @@ import {
   AlignJustify,
   Square,
   Sparkles,
+  Eye,
   EyeOff,
   Trash2,
 } from "lucide-react";
@@ -478,14 +479,24 @@ export function DesignSidebar({
                 })
               }
               className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors text-sm font-medium border ${currentDesign.visibility === "hidden" ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"}`}
+              title={
+                currentDesign.visibility === "hidden"
+                  ? "Show Element"
+                  : "Hide Element"
+              }
+              aria-label={
+                currentDesign.visibility === "hidden"
+                  ? "Show Element"
+                  : "Hide Element"
+              }
             >
               {currentDesign.visibility === "hidden" ? (
-                <EyeOff className="w-4 h-4" />
+                <Eye className="w-4 h-4" />
               ) : (
                 <EyeOff className="w-4 h-4" />
               )}
               {currentDesign.visibility === "hidden"
-                ? "Element Hidden"
+                ? "Show Element"
                 : "Hide Element"}
             </button>
 
