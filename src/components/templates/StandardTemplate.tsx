@@ -53,17 +53,17 @@ export function StandardTemplate({
   return (
     <div className="flex flex-col w-full min-h-full bg-white text-gray-900 font-serif p-12">
       {/* Header */}
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold mb-1">
+      <div className="mb-4 pr-32">
+        <h1 className="text-2xl font-bold mb-1 break-words">
           {data.personalInfo.fullName || "Your Name"}
         </h1>
-        <h2 className="text-sm font-bold text-gray-800">
+        <h2 className="text-sm font-bold text-gray-800 break-words">
           {data.personalInfo.jobTitle || "Job Title"}
         </h2>
       </div>
 
       {/* Contact Info */}
-      <div className="flex flex-col text-xs text-gray-800 mb-6">
+      <div className="flex flex-col text-xs text-gray-800 mb-6 pr-32 break-all">
         {data.personalInfo.phone && (
           <div>
             <a
@@ -121,7 +121,10 @@ export function StandardTemplate({
 
       {/* Portfolio QR Code */}
       {data.personalInfo.portfolio && (
-        <div className="flex flex-col items-end absolute top-12 right-12 text-center">
+        <div
+          data-element="qr-code"
+          className="flex flex-col items-end absolute top-12 right-12 text-center"
+        >
           <div>
             <a
               href={

@@ -1,0 +1,42 @@
+name: CI / PR Validation
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Code Formatting (Prettier)
+        run: npm run format:check
+
+      - name: Linting
+        run: npm run lint
+
+      - name: Type Checking
+        run: npm run typecheck
+
+      - name: Unit Tests
+        run: npm run test
+
+      - name: Security Audit
+        run: npm audit
+
+      - name: Production Build
+        run: npm run build

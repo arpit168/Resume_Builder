@@ -27,7 +27,9 @@ export function KeyboardShortcutsModal({
         { keys: ["Ctrl", "S"], label: "Save Design" },
         { keys: ["Ctrl", "Z"], label: "Undo" },
         { keys: ["Ctrl", "Y"], label: "Redo" },
+        { keys: ["Ctrl", "Shift", "Z"], label: "Redo (Alternative)" },
         { keys: ["Ctrl", "P"], label: "Print / Export" },
+        { keys: ["?", "/"], label: "Keyboard Shortcuts" },
       ],
     },
     {
@@ -39,13 +41,23 @@ export function KeyboardShortcutsModal({
       ],
     },
     {
-      title: "CANVAS",
+      title: "CANVAS & ELEMENTS",
       shortcuts: [
         { keys: ["Ctrl", "+"], label: "Zoom In" },
         { keys: ["Ctrl", "-"], label: "Zoom Out" },
         { keys: ["Ctrl", "0"], label: "Reset Zoom" },
         { keys: ["Ctrl", "K"], label: "Command Palette" },
-        { keys: ["Arrow Keys"], label: "Nudge Selected Element" },
+        { keys: ["Arrow Keys"], label: "Nudge Selected Element (2px)" },
+        { keys: ["Shift", "Arrow Keys"], label: "Large Nudge (10px)" },
+      ],
+    },
+    {
+      title: "MOUSE ACTIONS",
+      shortcuts: [
+        { keys: ["Click"], label: "Select Element" },
+        { keys: ["Double Click"], label: "Deselect Element" },
+        { keys: ["Triple Click"], label: "Select Entire Page" },
+        { keys: ["Drag"], label: "Move Element" },
       ],
     },
   ];

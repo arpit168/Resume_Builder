@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Resume, ElementDesign } from "@/types/resume";
 import { useResume } from "@/hooks/useResume";
 import {
@@ -16,7 +17,6 @@ import {
   AlignJustify,
   Square,
   Sparkles,
-  Layers,
   EyeOff,
   Trash2,
 } from "lucide-react";
@@ -45,15 +45,6 @@ export function DesignSidebar({
     });
   };
 
-  const resetElement = () => {
-    if (!selectedSelector) return;
-    updateDesign(resume.id, {
-      elements: {
-        [selectedSelector]: {},
-      },
-    });
-  };
-
   if (!selectedSelector) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-gray-500 dark:text-gray-400">
@@ -61,6 +52,26 @@ export function DesignSidebar({
         <p className="text-sm">
           Select any element on the resume to start editing its design.
         </p>
+      </div>
+    );
+  }
+
+  let isQR = false;
+  if (typeof document !== "undefined") {
+    const el = document.querySelector(selectedSelector);
+    if (el && el.closest('[data-element="qr-code"]')) {
+      isQR = true;
+    }
+  }
+
+  if (isQR) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-gray-500 dark:text-gray-400">
+        <BoxSelect className="w-12 h-12 mb-4 opacity-50" />
+        <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+          QR Code Selected
+        </p>
+        <p className="text-sm">You can not edit or move QR.</p>
       </div>
     );
   }
@@ -97,12 +108,6 @@ export function DesignSidebar({
         <h2 className="font-bold text-gray-900 dark:text-white text-sm">
           Element Properties
         </h2>
-        <button
-          onClick={resetElement}
-          className="text-xs text-red-600 hover:text-red-700 font-medium bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 px-2 py-1 rounded"
-        >
-          Reset
-        </button>
       </div>
 
       <div className="p-4 flex flex-col gap-6">
@@ -117,13 +122,13 @@ export function DesignSidebar({
                 Font Family
               </label>
               <select
-                value={currentDesign.fontFamily?.replace(/['"]/g, "") || ""}
+                value={currentDesign.fontFamily || ""}
                 onChange={(e) => handleUpdate({ fontFamily: e.target.value })}
                 className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
               >
                 <option value="">Default</option>
                 {FONTS.map((f) => (
-                  <option key={f} value={`'${f}', sans-serif`}>
+                  <option key={f} value={f}>
                     {f}
                   </option>
                 ))}
@@ -173,50 +178,51 @@ export function DesignSidebar({
                   Style & Formatting
                 </label>
                 <div className="flex bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden">
-                  <button
-                    onClick={() =>
-                      handleUpdate({
-                        fontWeight:
-                          currentDesign.fontWeight === "bold"
-                            ? "normal"
-                            : "bold",
-                      })
-                    }
-                    className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign.fontWeight === "bold" ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
-                    title="Bold (Ctrl+B)"
-                  >
-                    <Bold className="w-4 h-4" />
-                  </button>
-                  <div className="w-px bg-gray-300 dark:bg-gray-700" />
-                  <button
-                    onClick={() =>
-                      handleUpdate({
-                        fontStyle:
-                          currentDesign.fontStyle === "italic"
-                            ? "normal"
-                            : "italic",
-                      })
-                    }
-                    className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign.fontStyle === "italic" ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
-                    title="Italic (Ctrl+I)"
-                  >
-                    <Italic className="w-4 h-4" />
-                  </button>
-                  <div className="w-px bg-gray-300 dark:bg-gray-700" />
-                  <button
-                    onClick={() =>
-                      handleUpdate({
-                        textDecoration:
-                          currentDesign.textDecoration === "underline"
-                            ? "none"
-                            : "underline",
-                      })
-                    }
-                    className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign.textDecoration === "underline" ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
-                    title="Underline (Ctrl+U)"
-                  >
-                    <Underline className="w-4 h-4" />
-                  </button>
+                  {[
+                    {
+                      key: "fontWeight",
+                      icon: Bold,
+                      value: "bold",
+                      default: "normal",
+                      title: "Bold (Ctrl+B)",
+                    },
+                    {
+                      key: "fontStyle",
+                      icon: Italic,
+                      value: "italic",
+                      default: "normal",
+                      title: "Italic (Ctrl+I)",
+                    },
+                    {
+                      key: "textDecoration",
+                      icon: Underline,
+                      value: "underline",
+                      default: "none",
+                      title: "Underline (Ctrl+U)",
+                    },
+                  ].map((btn, i) => (
+                    <React.Fragment key={btn.key}>
+                      <button
+                        onClick={() =>
+                          handleUpdate({
+                            [btn.key]:
+                              currentDesign[
+                                btn.key as keyof typeof currentDesign
+                              ] === btn.value
+                                ? btn.default
+                                : btn.value,
+                          })
+                        }
+                        className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign[btn.key as keyof typeof currentDesign] === btn.value ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
+                        title={btn.title}
+                      >
+                        <btn.icon className="w-4 h-4" />
+                      </button>
+                      {i < 2 && (
+                        <div className="w-px bg-gray-300 dark:bg-gray-700" />
+                      )}
+                    </React.Fragment>
+                  ))}
                 </div>
               </div>
 
@@ -225,37 +231,29 @@ export function DesignSidebar({
                   Alignment
                 </label>
                 <div className="flex bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden">
-                  <button
-                    onClick={() => handleUpdate({ textAlign: "left" })}
-                    className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign.textAlign === "left" ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
-                    title="Align Left"
-                  >
-                    <AlignLeft className="w-4 h-4" />
-                  </button>
-                  <div className="w-px bg-gray-300 dark:bg-gray-700" />
-                  <button
-                    onClick={() => handleUpdate({ textAlign: "center" })}
-                    className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign.textAlign === "center" ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
-                    title="Align Center"
-                  >
-                    <AlignCenter className="w-4 h-4" />
-                  </button>
-                  <div className="w-px bg-gray-300 dark:bg-gray-700" />
-                  <button
-                    onClick={() => handleUpdate({ textAlign: "right" })}
-                    className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign.textAlign === "right" ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
-                    title="Align Right"
-                  >
-                    <AlignRight className="w-4 h-4" />
-                  </button>
-                  <div className="w-px bg-gray-300 dark:bg-gray-700" />
-                  <button
-                    onClick={() => handleUpdate({ textAlign: "justify" })}
-                    className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign.textAlign === "justify" ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
-                    title="Justify"
-                  >
-                    <AlignJustify className="w-4 h-4" />
-                  </button>
+                  {[
+                    { align: "left", icon: AlignLeft, title: "Align Left" },
+                    {
+                      align: "center",
+                      icon: AlignCenter,
+                      title: "Align Center",
+                    },
+                    { align: "right", icon: AlignRight, title: "Align Right" },
+                    { align: "justify", icon: AlignJustify, title: "Justify" },
+                  ].map((btn, i) => (
+                    <React.Fragment key={btn.align}>
+                      <button
+                        onClick={() => handleUpdate({ textAlign: btn.align })}
+                        className={`flex-1 p-1.5 flex justify-center transition-colors ${currentDesign.textAlign === btn.align ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700/50"}`}
+                        title={btn.title}
+                      >
+                        <btn.icon className="w-4 h-4" />
+                      </button>
+                      {i < 3 && (
+                        <div className="w-px bg-gray-300 dark:bg-gray-700" />
+                      )}
+                    </React.Fragment>
+                  ))}
                 </div>
               </div>
             </div>
@@ -467,27 +465,9 @@ export function DesignSidebar({
           </div>
         </section>
 
-        {/* Advanced Section */}
+        {/* Additional Actions */}
         <section className="pb-8 border-t border-gray-200 dark:border-gray-800 pt-6 mt-2">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-2">
-            <Layers className="w-4 h-4" /> Advanced
-          </h3>
-
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Layer (Z-Index)
-              </label>
-              <input
-                type="number"
-                value={currentDesign.zIndex || 0}
-                onChange={(e) =>
-                  handleUpdate({ zIndex: parseInt(e.target.value) || 0 })
-                }
-                className="w-20 text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800 text-center"
-              />
-            </div>
-
             <button
               onClick={() =>
                 handleUpdate({

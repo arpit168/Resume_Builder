@@ -86,25 +86,28 @@ export function MinimalTemplate({
   return (
     <div className="relative flex flex-col w-full min-h-full bg-white text-gray-800 font-sans p-12 max-w-4xl mx-auto leading-relaxed">
       {/* Header */}
-      <header className="mb-10">
+      <header className="mb-10 pr-32">
         <h1
-          className={`text-3xl font-light tracking-tight mb-1 ${accentColor}`}
+          className={`text-3xl font-light tracking-tight mb-1 break-words ${accentColor}`}
         >
           {data.personalInfo.fullName || "Your Name"}
         </h1>
         {data.personalInfo.jobTitle && (
-          <h2 className="text-lg font-medium text-gray-500 mb-4">
+          <h2 className="text-lg font-medium text-gray-500 mb-4 break-words">
             {data.personalInfo.jobTitle}
           </h2>
         )}
-        <div className="text-sm text-gray-400 flex flex-wrap gap-x-4 gap-y-2">
+        <div className="text-sm text-gray-400 flex flex-wrap gap-x-4 gap-y-2 break-all">
           {contactItems.map((item, index) => (
             <span key={index}>{item}</span>
           ))}
         </div>
 
         {data.personalInfo.portfolio && (
-          <div className="absolute top-12 right-12 flex flex-col items-end">
+          <div
+            data-element="qr-code"
+            className="absolute top-12 right-12 flex flex-col items-end"
+          >
             <div>
               <a
                 href={

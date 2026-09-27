@@ -219,23 +219,71 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
         selectedSelector
       ) {
         e.preventDefault(); // Prevent page scrolling
+
+        if (typeof document !== "undefined") {
+          const el = document.querySelector(selectedSelector);
+          if (el && el.closest('[data-element="qr-code"]')) return;
+        }
+
         const currentX = resume.design?.elements?.[selectedSelector]?.x || 0;
         const currentY = resume.design?.elements?.[selectedSelector]?.y || 0;
 
-        let newX = currentX;
-        let newY = currentY;
+        let dx = 0;
+        let dy = 0;
         const moveAmount = e.shiftKey ? 10 : 2; // Fine control (2px), or Shift for 10px
 
-        if (e.key === "ArrowUp") newY -= moveAmount;
-        if (e.key === "ArrowDown") newY += moveAmount;
-        if (e.key === "ArrowLeft") newX -= moveAmount;
-        if (e.key === "ArrowRight") newX += moveAmount;
+        if (e.key === "ArrowUp") dy -= moveAmount;
+        if (e.key === "ArrowDown") dy += moveAmount;
+        if (e.key === "ArrowLeft") dx -= moveAmount;
+        if (e.key === "ArrowRight") dx += moveAmount;
+
+        // Collision detection
+        if (typeof document !== "undefined") {
+          const el = document.querySelector(selectedSelector) as HTMLElement;
+          if (el) {
+            import("../../../utils/design").then(
+              ({ checkOverlap, getPaintedTransform, getPaperScale }) => {
+                const painted = getPaintedTransform(el);
+                const scale = getPaperScale("resume-preview-paper");
+
+                const newX = currentX + dx;
+                const newY = currentY + dy;
+
+                const totalDx = newX - painted.x;
+                const totalDy = newY - painted.y;
+
+                const isOverlapping = checkOverlap(
+                  el,
+                  totalDx,
+                  totalDy,
+                  "resume-preview-paper",
+                  scale,
+                );
+                if (isOverlapping) {
+                  // If it will overlap, don't move it
+                  return;
+                }
+
+                // Proceed with move
+                updateDesign(resume.id, {
+                  elements: {
+                    [selectedSelector]: {
+                      x: currentX + dx,
+                      y: currentY + dy,
+                    },
+                  },
+                });
+              },
+            );
+            return; // We handle the update inside the promise
+          }
+        }
 
         updateDesign(resume.id, {
           elements: {
             [selectedSelector]: {
-              x: newX,
-              y: newY,
+              x: currentX + dx,
+              y: currentY + dy,
             },
           },
         });

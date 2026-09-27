@@ -1,6 +1,7 @@
 "use client";
 
 import { DesignConfig } from "@/types/resume";
+import { getNextFontFamily } from "@/lib/pdf/fontUtils";
 
 export function DesignStyleInjector({ design }: { design?: DesignConfig }) {
   if (!design || !design.elements) return null;
@@ -26,7 +27,8 @@ export function DesignStyleInjector({ design }: { design?: DesignConfig }) {
           );
         }
         if (styles.fontFamily) {
-          rules.push(`font-family: ${styles.fontFamily} !important;`);
+          const nextFontFamily = getNextFontFamily(styles.fontFamily);
+          rules.push(`font-family: ${nextFontFamily} !important;`);
         }
         if (styles.fontSize) {
           rules.push(`font-size: ${styles.fontSize} !important;`);
@@ -76,9 +78,6 @@ export function DesignStyleInjector({ design }: { design?: DesignConfig }) {
         if (styles.textDecoration) {
           rules.push(`text-decoration: ${styles.textDecoration} !important;`);
         }
-        if (styles.zIndex !== undefined) {
-          rules.push(`z-index: ${styles.zIndex} !important;`);
-        }
         if (styles.visibility) {
           rules.push(`visibility: ${styles.visibility} !important;`);
         }
@@ -96,7 +95,9 @@ export function DesignStyleInjector({ design }: { design?: DesignConfig }) {
         }
 
         if (rules.length === 0) return "";
-        return `${selector} { ${rules.join(" ")} }`;
+        const safeSelector = selector.replace(/[<>]/g, "");
+        const safeRules = rules.join(" ").replace(/[<>]/g, "");
+        return `${safeSelector} { ${safeRules} }`;
       })
       .join("\n");
   };
