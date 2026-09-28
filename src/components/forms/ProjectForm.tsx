@@ -163,7 +163,7 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                           className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
-                      <div>
+                      <div className="md:col-span-2">
                         <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
                           Live URL (Optional)
                         </label>
@@ -176,22 +176,6 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="https://myproject.com"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
-                          GitHub URL (Optional)
-                        </label>
-                        <input
-                          type="url"
-                          value={project.githubUrl}
-                          onChange={(e) =>
-                            updateProject(resume.id, project.id, {
-                              githubUrl: e.target.value,
-                            })
-                          }
-                          placeholder="https://github.com/username/repo"
                           className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>

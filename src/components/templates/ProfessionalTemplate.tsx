@@ -273,11 +273,11 @@ export function ProfessionalTemplate({
             <div className="flex flex-col gap-2">
               {data.experience.map((exp) => (
                 <div key={exp.id}>
-                  <div className="flex justify-between items-baseline">
-                    <div className="font-bold text-[13px] text-gray-900">
+                  <div className="flex justify-between items-start mb-0.5 w-full">
+                    <div className="font-bold text-[13px] text-gray-900 flex-1 pr-4">
                       {exp.company}
                     </div>
-                    <div className="text-[12px] italic text-gray-600 whitespace-nowrap">
+                    <div className="text-[12px] italic text-gray-600 whitespace-nowrap shrink-0 text-right">
                       {formatDate(exp.startDate)}{" "}
                       {formatDate(exp.startDate) &&
                       (exp.current || formatDate(exp.endDate))
@@ -308,11 +308,11 @@ export function ProfessionalTemplate({
             <div className="flex flex-col gap-2">
               {data.education.map((edu) => (
                 <div key={edu.id}>
-                  <div className="flex justify-between items-baseline">
-                    <div className="font-bold text-[13px] text-gray-900">
+                  <div className="flex justify-between items-start mb-0.5 w-full">
+                    <div className="font-bold text-[13px] text-gray-900 flex-1 pr-4">
                       {edu.degree}
                     </div>
-                    <div className="text-[12px] italic text-gray-600 whitespace-nowrap">
+                    <div className="text-[12px] italic text-gray-600 whitespace-nowrap shrink-0 text-right">
                       {formatDate(edu.startDate)}{" "}
                       {formatDate(edu.startDate) && formatDate(edu.endDate)
                         ? "–"

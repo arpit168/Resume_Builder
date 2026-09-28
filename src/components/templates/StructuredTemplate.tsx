@@ -28,7 +28,9 @@ const SectionHeader = ({
 }) => (
   <div className="flex items-center gap-4 my-4">
     <div className={`flex-grow h-px border-t ${colors.border}`}></div>
-    <h3 className={`text-sm font-bold lowercase tracking-wide ${colors.text}`}>
+    <h3
+      className={`text-sm font-bold lowercase tracking-wide whitespace-nowrap shrink-0 ${colors.text}`}
+    >
       {title}
     </h3>
     <div className={`flex-grow h-px border-t ${colors.border}`}></div>
@@ -173,7 +175,7 @@ export function StructuredTemplate({
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 ">
         {/* Objective / Summary */}
         {data.summary && (
           <section>
