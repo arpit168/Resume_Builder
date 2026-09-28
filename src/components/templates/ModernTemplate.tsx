@@ -168,11 +168,13 @@ export function ModernTemplate({
               <div className="flex flex-col gap-4">
                 {data.experience.map((exp) => (
                   <div key={exp.id}>
-                    <div className="flex justify-between items-baseline mb-1">
-                      <h4 className="font-bold text-gray-900 text-lg">
+                    <div className="flex justify-between items-start mb-1 w-full">
+                      <h4 className="font-bold text-gray-900 text-lg flex-1 pr-4">
                         {exp.jobTitle}
                       </h4>
-                      <span className={`text-sm font-semibold ${colors.text}`}>
+                      <span
+                        className={`text-sm font-semibold ${colors.text} whitespace-nowrap shrink-0 text-right`}
+                      >
                         {formatDate(exp.startDate)}{" "}
                         {formatDate(exp.startDate) &&
                         (exp.current || formatDate(exp.endDate))
@@ -203,8 +205,8 @@ export function ModernTemplate({
               <div className="flex flex-col gap-4">
                 {data.projects.map((proj) => (
                   <div key={proj.id}>
-                    <div className="flex justify-between items-baseline mb-1">
-                      <h4 className="font-bold text-gray-900 text-lg">
+                    <div className="flex justify-between items-start mb-1 w-full">
+                      <h4 className="font-bold text-gray-900 text-lg flex-1 pr-4">
                         {proj.projectUrl ? (
                           <a
                             href={
@@ -249,11 +251,13 @@ export function ModernTemplate({
               <div className="flex flex-col gap-4">
                 {data.education.map((edu) => (
                   <div key={edu.id}>
-                    <div className="flex justify-between items-baseline mb-1">
-                      <h4 className="font-bold text-gray-900 text-lg">
+                    <div className="flex justify-between items-start mb-1 w-full">
+                      <h4 className="font-bold text-gray-900 text-lg flex-1 pr-4">
                         {edu.degree}
                       </h4>
-                      <span className={`text-sm font-semibold ${colors.text}`}>
+                      <span
+                        className={`text-sm font-semibold ${colors.text} whitespace-nowrap shrink-0 text-right`}
+                      >
                         {formatDate(edu.startDate)}{" "}
                         {formatDate(edu.startDate) && formatDate(edu.endDate)
                           ? "-"
