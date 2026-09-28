@@ -457,6 +457,22 @@ export const useResumeStore = create<ResumeState>()(
     },
     {
       name: "resume-builder-data",
+      version: 1,
+      migrate: (persistedState: unknown, version: number) => {
+        if (version === 0) {
+          // Future migrations can be handled here safely
+        }
+        return persistedState as ResumeState;
+      },
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.error(
+            "CRITICAL: Failed to rehydrate resume data from local storage. Data may be corrupted.",
+            error,
+          );
+          // If corruption is fatal, application won't crash immediately and can fallback to empty state.
+        }
+      },
     },
   ),
 );

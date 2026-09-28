@@ -91,6 +91,16 @@ jobs:
         run: npm run test
 
       # --------------------------------------------------
+      # E2E TESTS
+      # --------------------------------------------------
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: npx playwright test
+
+      # --------------------------------------------------
       # SECURITY
       # --------------------------------------------------
 
