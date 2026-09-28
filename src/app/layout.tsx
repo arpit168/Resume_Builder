@@ -17,9 +17,39 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Resume Builder – Create Professional Resumes",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  ),
+  title: {
+    default: "Hire-Craft | Professional Resume Builder",
+    template: "%s | Hire-Craft",
+  },
   description:
-    "Create, customize, preview and download professional resumes directly in your browser.",
+    "Create, customize, preview and download professional resumes directly in your browser. Build an ATS-friendly resume in minutes.",
+  keywords: [
+    "resume builder",
+    "cv maker",
+    "professional resume",
+    "hire-craft",
+    "ats friendly resume",
+  ],
+  openGraph: {
+    title: "Hire-Craft | Professional Resume Builder",
+    description:
+      "Create, customize, preview and download professional resumes directly in your browser.",
+    type: "website",
+    siteName: "Hire-Craft",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hire-Craft | Professional Resume Builder",
+    description:
+      "Build an ATS-friendly resume in minutes completely in your browser.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 import { InitialLoaderWrapper } from "@/components/layout/InitialLoaderWrapper";
