@@ -97,9 +97,9 @@ export function DesignStyleInjector({ design }: { design?: DesignConfig }) {
         if (rules.length === 0) return "";
 
         // Sanitize selector: only allow CSS-safe characters.
-        // Strip anything that could escape the selector context ({, }, <, >, etc.)
+        // Strip anything that could escape the selector context ({, }, <, etc.)
         const safeSelector = selector
-          .replace(/[<>{}]/g, "")
+          .replace(/[<>{}]/g, (match) => (match === ">" ? ">" : ""))
           .replace(/\/\*/g, "") // strip CSS comment openers
           .replace(/\*\//g, ""); // strip CSS comment closers
         if (!safeSelector.trim()) return "";

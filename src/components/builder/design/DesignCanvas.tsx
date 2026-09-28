@@ -120,7 +120,7 @@ export function DesignCanvas({
 
     // Triple click selects the entire page (root wrapper)
     if (e.detail === 3) {
-      onSelect("#resume-preview-paper");
+      onSelect("#resume-preview-paper > div:nth-child(1)");
       return;
     }
 
@@ -197,9 +197,13 @@ export function DesignCanvas({
       let dx = (moveEvent.clientX - startX) / currentScale;
       let dy = (moveEvent.clientY - startY) / currentScale;
 
-      // Clamp to paper boundaries
-      dx = Math.max(minDx, Math.min(maxDx, dx));
-      dy = Math.max(minDy, Math.min(maxDy, dy));
+      // Clamp to paper boundaries (skip if moving the entire page wrapper)
+      if (
+        currentSelectedSelector !== "#resume-preview-paper > div:nth-child(1)"
+      ) {
+        dx = Math.max(minDx, Math.min(maxDx, dx));
+        dy = Math.max(minDy, Math.min(maxDy, dy));
+      }
 
       const newX = initialTransformX + dx;
       const newY = initialTransformY + dy;
@@ -211,6 +215,8 @@ export function DesignCanvas({
           const totalDy = newY - painted.y;
 
           if (
+            currentSelectedSelector !==
+              "#resume-preview-paper > div:nth-child(1)" &&
             checkOverlap(
               el,
               totalDx,
@@ -218,8 +224,9 @@ export function DesignCanvas({
               "resume-preview-paper",
               currentScale,
             )
-          )
+          ) {
             return;
+          }
 
           updateDesign(currentResumeId, {
             elements: {
@@ -312,8 +319,43 @@ export function DesignCanvas({
                 className="transition-all duration-75"
               >
                 {/* Drag Handle Label */}
-                <div className="absolute -top-6 -left-0.5 bg-blue-600 text-white text-[10px] px-2 py-1 rounded-t-md rounded-br-md font-medium shadow-sm whitespace-nowrap">
-                  {isQRSelected ? "Locked (QR Code)" : "Selected Element"}
+                <div className="absolute -top-6 -left-0.5 flex items-center bg-blue-600 text-white text-[10px] rounded-t-md rounded-br-md font-medium shadow-sm whitespace-nowrap overflow-hidden pointer-events-auto">
+                  <span className="px-2 py-1 cursor-grab">
+                    {isQRSelected ? "Locked (QR Code)" : "Selected Element"}
+                  </span>
+                  <button
+                    onPointerDown={(e) => {
+                      e.stopPropagation(); // prevent drag
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (typeof document !== "undefined") {
+                        const el = document.querySelector(selectedSelector);
+                        if (
+                          el &&
+                          el.parentElement &&
+                          el.parentElement.id !== "resume-preview-paper" &&
+                          !el.parentElement.closest('[data-element="qr-code"]')
+                        ) {
+                          import("../../../utils/design").then(
+                            ({ getUniqueSelector }) => {
+                              const parentSel = getUniqueSelector(
+                                el.parentElement as HTMLElement,
+                                "resume-preview-paper",
+                              );
+                              if (parentSel) {
+                                onSelect(parentSel);
+                              }
+                            },
+                          );
+                        }
+                      }
+                    }}
+                    className="px-2 py-1 bg-blue-700 hover:bg-blue-800 transition-colors border-l border-blue-500 cursor-pointer"
+                    title="Select Parent Group (moves entire block together)"
+                  >
+                    Select Parent ⬆
+                  </button>
                 </div>
               </div>
             )}
