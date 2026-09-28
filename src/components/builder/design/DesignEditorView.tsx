@@ -258,9 +258,6 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
           if (el && el.closest('[data-element="qr-code"]')) return;
         }
 
-        const currentX = resume.design?.elements?.[selectedSelector]?.x || 0;
-        const currentY = resume.design?.elements?.[selectedSelector]?.y || 0;
-
         let dx = 0;
         let dy = 0;
         const moveAmount = e.shiftKey ? 10 : 2; // Fine (2px) or large (10px) nudge
@@ -270,30 +267,43 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
         if (e.key === "ArrowLeft") dx -= moveAmount;
         if (e.key === "ArrowRight") dx += moveAmount;
 
+        const currentX = resume.design?.elements?.[selectedSelector]?.x || 0;
+        const currentY = resume.design?.elements?.[selectedSelector]?.y || 0;
+
         if (typeof document !== "undefined") {
           const el = document.querySelector(selectedSelector) as HTMLElement;
-          if (el) {
+          const paper = document.getElementById("resume-preview-paper");
+          if (el && paper) {
             import("../../../utils/design").then(
-              ({ checkOverlap, getPaintedTransform, getPaperScale }) => {
+              ({ getPaintedTransform, getPaperScale }) => {
                 const painted = getPaintedTransform(el);
                 const scale = getPaperScale("resume-preview-paper");
 
                 const newX = currentX + dx;
                 const newY = currentY + dy;
 
+                // Clamp within paper boundaries instead of using overlap detection,
+                // which incorrectly blocks Left/Up movement due to dense resume content.
+                const paperRect = paper.getBoundingClientRect();
+                const elRect = el.getBoundingClientRect();
+
+                const minDx = -(elRect.left - paperRect.left) / scale;
+                const maxDx = (paperRect.right - elRect.right) / scale;
+                const minDy = -(elRect.top - paperRect.top) / scale;
+                const maxDy = (paperRect.bottom - elRect.bottom) / scale;
+
                 const totalDx = newX - painted.x;
                 const totalDy = newY - painted.y;
 
                 if (
-                  checkOverlap(
-                    el,
-                    totalDx,
-                    totalDy,
-                    "resume-preview-paper",
-                    scale,
-                  )
+                  selectedSelector !==
+                    "#resume-preview-paper > div:nth-child(1)" &&
+                  (totalDx < minDx ||
+                    totalDx > maxDx ||
+                    totalDy < minDy ||
+                    totalDy > maxDy)
                 ) {
-                  return;
+                  return; // Would go out of paper bounds
                 }
 
                 updateDesign(resume.id, {
@@ -321,6 +331,30 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
       if (e.key === "Escape" && selectedSelector) {
         e.preventDefault();
         setSelectedSelector(null);
+      }
+
+      // Shift + Enter — select parent
+      if (e.key === "Enter" && e.shiftKey && selectedSelector) {
+        e.preventDefault();
+        if (typeof document !== "undefined") {
+          const el = document.querySelector(selectedSelector);
+          if (
+            el &&
+            el.parentElement &&
+            el.parentElement.id !== "resume-preview-paper" &&
+            !el.parentElement.closest('[data-element="qr-code"]')
+          ) {
+            import("../../../utils/design").then(({ getUniqueSelector }) => {
+              const parentSel = getUniqueSelector(
+                el.parentElement as HTMLElement,
+                "resume-preview-paper",
+              );
+              if (parentSel) {
+                setSelectedSelector(parentSel);
+              }
+            });
+          }
+        }
       }
     };
 

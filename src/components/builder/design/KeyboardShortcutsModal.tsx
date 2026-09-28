@@ -49,6 +49,10 @@ export function KeyboardShortcutsModal({
         { keys: ["Ctrl", "K"], label: "Command Palette" },
         { keys: ["Arrow Keys"], label: "Nudge Selected Element (2px)" },
         { keys: ["Shift", "Arrow Keys"], label: "Large Nudge (10px)" },
+        {
+          keys: ["Triple Click", "→", "Arrow Keys"],
+          label: "Move ALL Elements Together",
+        },
       ],
     },
     {
@@ -56,6 +60,10 @@ export function KeyboardShortcutsModal({
       shortcuts: [
         { keys: ["Click"], label: "Select Element" },
         { keys: ["Double Click"], label: "Deselect Element" },
+        {
+          keys: ["Shift", "Enter"],
+          label: "Select Parent Group (moves entire block)",
+        },
         { keys: ["Triple Click"], label: "Select Entire Page" },
         { keys: ["Drag"], label: "Move Element" },
       ],
