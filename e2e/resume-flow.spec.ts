@@ -40,9 +40,7 @@ test("complete resume creation flow", async ({ page }) => {
   // 6. Export PDF
   // We cannot easily test the exact PDF bytes here natively without external libs,
   // but we can verify the button triggers the process.
-  const exportBtn = page
-    .getByRole("button", { name: /export|download|pdf/i })
-    .first();
+  const exportBtn = page.getByRole("button", { name: /pdf/i }).first();
   if (await exportBtn.isVisible()) {
     // Wait for the download event
     const downloadPromise = page
