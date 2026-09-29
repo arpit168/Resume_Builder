@@ -9,6 +9,7 @@ import { DesignSidebar } from "./DesignSidebar";
 import { DesignStyleInjector } from "./DesignStyleInjector";
 import { KeyboardShortcutsModal } from "./KeyboardShortcutsModal";
 import { CommandPalette, CommandItem } from "./CommandPalette";
+import { useToastStore } from "@/store/toastStore";
 
 function isTypingContext(target: EventTarget | null): boolean {
   if (!target) return false;
@@ -370,7 +371,12 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
       action: () => {
         // Design is auto-saved to localStorage via Zustand persist.
         // Provide user feedback.
-        alert("Design saved automatically to your browser storage.");
+        useToastStore
+          .getState()
+          .addToast(
+            "Design saved automatically to your browser storage.",
+            "success",
+          );
       },
     },
     { id: "undo", label: "Undo", shortcut: "Ctrl+Z", action: history.undo },

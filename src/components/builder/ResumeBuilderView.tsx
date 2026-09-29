@@ -4,20 +4,32 @@ import { useResume } from "@/hooks/useResume";
 import { ResumeEditor } from "./ResumeEditor";
 import { ResumePreview } from "./ResumePreview";
 import { ResumeToolbar } from "./ResumeToolbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import { useToastStore } from "@/store/toastStore";
 
 export function ResumeBuilderView({ resumeId }: { resumeId: string }) {
   const { resumes, isHydrated } = useResume();
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isHydrated) {
+      const found = resumes.find((r) => r.id === resumeId);
+      if (!found) {
+        useToastStore.getState().addToast("Resume not found", "error");
+        router.push("/");
+      }
+    }
+  }, [isHydrated, resumes, resumeId, router]);
 
   if (!isHydrated)
     return <div className="p-8 text-center">Loading builder...</div>;
 
   const resume = resumes.find((r) => r.id === resumeId);
   if (!resume) {
-    return (
-      <div className="p-8 text-center text-red-500">Resume not found.</div>
-    );
+    return null;
   }
 
   return (

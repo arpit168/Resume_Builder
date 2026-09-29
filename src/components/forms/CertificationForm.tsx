@@ -138,7 +138,7 @@ export function CertificationForm({ resume }: { resume: Resume }) {
                   <div className="p-4 space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Certification Name
                         </label>
                         <input
@@ -150,11 +150,11 @@ export function CertificationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. AWS Certified Solutions Architect"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Issuing Organization
                         </label>
                         <input
@@ -166,11 +166,11 @@ export function CertificationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. Amazon Web Services"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Issue Date
                         </label>
                         <input
@@ -181,11 +181,11 @@ export function CertificationForm({ resume }: { resume: Resume }) {
                               issueDate: e.target.value,
                             })
                           }
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Credential ID (Optional)
                         </label>
                         <input
@@ -197,11 +197,11 @@ export function CertificationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. AWS-12345678"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Credential URL (Optional)
                         </label>
                         <input
@@ -213,7 +213,7 @@ export function CertificationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="https://credly.com/..."
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                     </div>

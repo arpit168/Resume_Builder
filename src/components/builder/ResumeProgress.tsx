@@ -48,28 +48,33 @@ export function ResumeProgress({ data }: { data: ResumeData }) {
   }, [data]);
 
   // Determine color based on progress
-  let colorClass = "bg-blue-500";
-  if (progress > 40) colorClass = "bg-orange-500";
-  if (progress > 70) colorClass = "bg-gray-500";
-  if (progress === 100) colorClass = "bg-green-500";
+  let colorClass = "bg-gradient-to-r from-red-500 to-orange-500";
+  if (progress > 40)
+    colorClass = "bg-gradient-to-r from-orange-500 to-amber-500";
+  if (progress > 70)
+    colorClass = "bg-gradient-to-r from-blue-500 to-indigo-500";
+  if (progress === 100)
+    colorClass = "bg-gradient-to-r from-emerald-500 to-teal-500";
 
   return (
-    <div className="w-full bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 p-4">
-      <div className="flex justify-between items-end mb-2">
-        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+    <div className="w-full bg-white dark:bg-neutral-950/80 backdrop-blur-sm border-b border-gray-200 dark:border-neutral-800 p-5 shrink-0 z-10 sticky top-0 shadow-sm">
+      <div className="flex justify-between items-end mb-3">
+        <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
           Profile Strength
         </span>
-        <span className="text-sm font-bold text-gray-900 dark:text-white">
+        <span
+          className={`text-sm font-bold ${progress === 100 ? "text-emerald-600 dark:text-emerald-400" : "text-gray-900 dark:text-white"}`}
+        >
           {progress}%
         </span>
       </div>
-      <div className="w-full h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-gray-100 dark:bg-neutral-800 rounded-full overflow-hidden shadow-inner">
         <div
           className={`h-full ${colorClass} transition-all duration-1000 ease-out rounded-full`}
           style={{ width: `${progress}%` }}
         />
       </div>
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 mt-2.5 flex items-center gap-1.5">
         {progress < 40 && "Fill out more basic information to get started."}
         {progress >= 40 &&
           progress < 70 &&

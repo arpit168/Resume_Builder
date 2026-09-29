@@ -6,12 +6,16 @@ export const metadata = {
 
 export default function DashboardPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">My Resumes</h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Manage and create your professional resumes.
-        </p>
+    <div className="container mx-auto px-4 py-12 max-w-7xl">
+      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-4xl font-extrabold mb-2 tracking-tight text-gray-900 dark:text-white">
+            My Resumes
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 font-medium">
+            Manage and create your professional resumes.
+          </p>
+        </div>
       </div>
       <ResumeGrid />
     </div>

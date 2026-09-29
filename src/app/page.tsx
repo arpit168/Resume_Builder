@@ -27,7 +27,7 @@ export default function Home() {
       <Particles />
 
       {/* Hero Section */}
-      <section className="relative px-6 pt-16 pb-12 md:pt-24 md:pb-20 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 z-10">
+      <section className="relative px-6 pt-8 pb-12 md:pt-12 md:pb-20 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 z-10">
         {/* Left Content */}
         <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left w-full max-w-2xl">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-200 dark:border-blue-800/50 bg-transparent text-blue-600 dark:text-blue-400 text-sm font-semibold mb-6 shadow-sm">
