@@ -54,7 +54,7 @@ export function ResumeProgress({ data }: { data: ResumeData }) {
   if (progress === 100) colorClass = "bg-green-500";
 
   return (
-    <div className="w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4">
+    <div className="w-full bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 p-4">
       <div className="flex justify-between items-end mb-2">
         <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
           Profile Strength

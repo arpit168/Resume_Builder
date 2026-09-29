@@ -72,7 +72,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
                 </div>
               ) : (
                 <div
-                  className="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                  className="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-neutral-900/50 flex flex-col items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <User className="w-8 h-8 mb-1 text-gray-400" />
@@ -108,7 +108,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.fullName}
               onChange={handleChange}
               placeholder="John Doe"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -121,7 +121,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.jobTitle}
               onChange={handleChange}
               placeholder="Frontend Developer"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -134,7 +134,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.email}
               onChange={handleChange}
               placeholder="john@example.com"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -147,7 +147,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.phone}
               onChange={handleChange}
               placeholder="+1 234 567 890"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="md:col-span-2">
@@ -160,7 +160,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.location}
               onChange={handleChange}
               placeholder="City, Country"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -173,7 +173,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.website}
               onChange={handleChange}
               placeholder="https://johndoe.com"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -186,7 +186,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.linkedin}
               onChange={handleChange}
               placeholder="linkedin.com/in/johndoe"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -199,7 +199,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.github || ""}
               onChange={handleChange}
               placeholder="github.com/johndoe"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -212,7 +212,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.portfolio || ""}
               onChange={handleChange}
               placeholder="https://johndoe.dev"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>

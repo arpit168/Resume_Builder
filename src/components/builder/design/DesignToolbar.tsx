@@ -22,7 +22,7 @@ export function DesignToolbar({
   canRedo,
 }: DesignToolbarProps) {
   return (
-    <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shrink-0 h-16">
+    <div className="flex items-center justify-between p-4 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shrink-0 h-16">
       <div className="flex items-center gap-4">
         <Link
           href={`/builder/${resume.id}`}

@@ -67,7 +67,7 @@ export function CommandPalette({
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh] bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       <div
-        className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-xl overflow-hidden border border-gray-200 dark:border-gray-800 flex flex-col"
+        className="bg-white dark:bg-black rounded-xl shadow-2xl w-full max-w-xl overflow-hidden border border-gray-200 dark:border-gray-800 flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center px-4 py-3 border-b border-gray-100 dark:border-gray-800">
@@ -83,7 +83,7 @@ export function CommandPalette({
               setSelectedIndex(0);
             }}
           />
-          <div className="text-xs font-mono text-gray-400 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
+          <div className="text-xs font-mono text-gray-400 px-2 py-1 bg-gray-100 dark:bg-neutral-900 rounded border border-gray-200 dark:border-gray-700">
             ESC
           </div>
         </div>
@@ -110,7 +110,7 @@ export function CommandPalette({
               >
                 <span className="font-medium">{cmd.label}</span>
                 {cmd.shortcut && (
-                  <span className="text-xs font-mono text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                  <span className="text-xs font-mono text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-neutral-900 px-2 py-1 rounded">
                     {cmd.shortcut}
                   </span>
                 )}

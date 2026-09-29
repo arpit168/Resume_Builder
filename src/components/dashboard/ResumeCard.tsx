@@ -56,7 +56,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
   };
 
   return (
-    <div className="group relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col h-[280px]">
+    <div className="group relative bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col h-[280px]">
       <div
         className="p-6 flex-grow cursor-pointer"
         onClick={() => router.push(`/builder/${resume.id}`)}
@@ -73,7 +73,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
             onBlur={handleRename}
             onKeyDown={(e) => e.key === "Enter" && handleRename()}
             onClick={(e) => e.stopPropagation()}
-            className="w-full text-lg font-semibold bg-gray-50 dark:bg-gray-900 border border-blue-500 rounded px-2 py-1 mb-1 focus:outline-none"
+            className="w-full text-lg font-semibold bg-gray-50 dark:bg-black border border-blue-500 rounded px-2 py-1 mb-1 focus:outline-none"
             autoFocus
           />
         ) : (
@@ -87,7 +87,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
         </p>
       </div>
 
-      <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-800/50">
+      <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-neutral-900/50">
         <div className="text-xs text-gray-500 dark:text-gray-400">
           Updated {formatDate(resume.updatedAt)}
         </div>
@@ -123,7 +123,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
                   }}
                 />
                 <div
-                  className="absolute right-0 bottom-full mb-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+                  className="absolute right-0 bottom-full mb-2 w-48 bg-white dark:bg-black rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button

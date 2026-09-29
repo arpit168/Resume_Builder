@@ -2,7 +2,7 @@ import React from "react";
 
 export function Loader() {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white dark:bg-gray-950">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white dark:bg-black">
       {/* Logo Area */}
       <div className="flex flex-col items-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="relative mb-6">

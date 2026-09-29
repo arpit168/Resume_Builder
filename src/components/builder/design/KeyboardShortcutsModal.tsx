@@ -73,10 +73,10 @@ export function KeyboardShortcutsModal({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       <div
-        className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-200 dark:border-gray-800"
+        className="bg-white dark:bg-black rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-200 dark:border-gray-800"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+        <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-neutral-900/50">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">
             Keyboard Shortcuts
           </h2>
@@ -104,7 +104,7 @@ export function KeyboardShortcutsModal({
                       {sc.keys.map((k, j) => (
                         <span
                           key={j}
-                          className="px-2 py-1 text-xs font-mono font-semibold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded shadow-sm"
+                          className="px-2 py-1 text-xs font-mono font-semibold bg-gray-100 dark:bg-neutral-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded shadow-sm"
                         >
                           {k}
                         </span>

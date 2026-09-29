@@ -41,7 +41,7 @@ export function Header() {
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2 rounded-full bg-gray-100 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 border border-gray-200 dark:border-gray-700/50 transition-all"
+                className="p-2 rounded-full bg-gray-100 dark:bg-neutral-900/50 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 border border-gray-200 dark:border-gray-700/50 transition-all"
                 aria-label="Toggle theme"
                 title="Toggle Theme"
               >
