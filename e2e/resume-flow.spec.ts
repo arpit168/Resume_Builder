@@ -11,23 +11,20 @@ test.describe("Resume Builder Flow", () => {
     // 2. Go to Dashboard and create a resume
     await page.goto("/dashboard");
     const createBtn = page.getByRole("button", {
-      name: /let's get started|create/i,
+      name: "Create Resume",
     });
-    if (await createBtn.isVisible()) {
-      await createBtn.click();
-    }
+    await createBtn.waitFor({ state: "visible" });
+    await createBtn.click();
 
-    // Wait for the builder to load
-    await page.waitForURL(/\/builder\/.+/);
+    // Wait for the builder to load by waiting for a specific form element
+    const fullNameInput = page.getByLabel("Full Name");
+    await fullNameInput.waitFor({ state: "visible", timeout: 15000 });
 
     // 3. Form Input test (Personal Info)
-    // The label is "Full Name"
-    const fullNameInput = page.getByLabel("Full Name");
-    await expect(fullNameInput).toBeVisible();
     await fullNameInput.fill("E2E Test User");
 
     const jobTitleInput = page.getByLabel("Professional Title");
-    await expect(jobTitleInput).toBeVisible();
+    await jobTitleInput.waitFor({ state: "visible" });
     await jobTitleInput.fill("Senior Quality Engineer");
 
     // 4. Validate data is shown in the preview
@@ -38,7 +35,7 @@ test.describe("Resume Builder Flow", () => {
 
     // 5. Test persistence by reloading
     await page.reload();
-    await page.waitForURL(/\/builder\/.+/);
+    await fullNameInput.waitFor({ state: "visible", timeout: 15000 });
 
     // Ensure inputs still have the value
     await expect(page.getByLabel("Full Name")).toHaveValue("E2E Test User");
