@@ -17,13 +17,13 @@ test.describe("Resume Builder Flow", () => {
     await createBtn.click();
 
     // Wait for the builder to load by waiting for a specific form element
-    const fullNameInput = page.getByPlaceholder("John Doe");
+    const fullNameInput = page.getByLabel("Full Name");
     await fullNameInput.waitFor({ state: "visible", timeout: 15000 });
 
     // 3. Form Input test (Personal Info)
     await fullNameInput.fill("E2E Test User");
 
-    const jobTitleInput = page.getByPlaceholder("Frontend Developer");
+    const jobTitleInput = page.getByLabel("Professional Title");
     await jobTitleInput.waitFor({ state: "visible" });
     await jobTitleInput.fill("Senior Quality Engineer");
 
@@ -38,10 +38,8 @@ test.describe("Resume Builder Flow", () => {
     await fullNameInput.waitFor({ state: "visible", timeout: 15000 });
 
     // Ensure inputs still have the value
-    await expect(page.getByPlaceholder("John Doe")).toHaveValue(
-      "E2E Test User",
-    );
-    await expect(page.getByPlaceholder("Frontend Developer")).toHaveValue(
+    await expect(page.getByLabel("Full Name")).toHaveValue("E2E Test User");
+    await expect(page.getByLabel("Professional Title")).toHaveValue(
       "Senior Quality Engineer",
     );
 
@@ -59,6 +57,6 @@ test.describe("Resume Builder Flow", () => {
     expect(download.suggestedFilename()).toBe("E2E_Test_User.pdf");
 
     // Verify it doesn't crash the page after download
-    await expect(page.getByPlaceholder("John Doe")).toBeVisible();
+    await expect(page.getByLabel("Full Name")).toBeVisible();
   });
 });

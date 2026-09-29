@@ -105,10 +105,14 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
+            <label
+              htmlFor="fullName"
+              className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide"
+            >
               Full Name
             </label>
             <input
+              id="fullName"
               type="text"
               name="fullName"
               value={data.fullName}
@@ -118,10 +122,14 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
             />
           </div>
           <div>
-            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
+            <label
+              htmlFor="jobTitle"
+              className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide"
+            >
               Professional Title
             </label>
             <input
+              id="jobTitle"
               type="text"
               name="jobTitle"
               value={data.jobTitle}
