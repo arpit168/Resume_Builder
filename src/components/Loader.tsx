@@ -112,7 +112,7 @@ export function Loader() {
         </h1>
 
         <p className="text-[#0B1F40]/80 dark:text-gray-300 text-xl tracking-[0.25em] uppercase font-medium">
-          Resume Builder
+          Build Your Own Career
         </p>
       </div>
 

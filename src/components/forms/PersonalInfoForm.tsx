@@ -4,6 +4,7 @@ import { useResume } from "@/hooks/useResume";
 import { Resume } from "@/types/resume";
 import { X, User } from "lucide-react";
 import { useRef } from "react";
+import { useToastStore } from "@/store/toastStore";
 
 export function PersonalInfoForm({ resume }: { resume: Resume }) {
   const { updatePersonalInfo } = useResume();
@@ -19,12 +20,17 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Please upload an image file");
+      useToastStore.getState().addToast("Please upload an image file", "error");
       return;
     }
 
     if (file.size > 2 * 1024 * 1024) {
-      alert("File is too large. Please upload an image smaller than 2MB.");
+      useToastStore
+        .getState()
+        .addToast(
+          "File is too large. Please upload an image smaller than 2MB.",
+          "error",
+        );
       return;
     }
 
@@ -46,7 +52,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold mb-4 border-b pb-2 border-gray-200 dark:border-gray-800">
+        <h2 className="text-xl font-bold mb-6 border-b pb-3 border-gray-200 dark:border-neutral-800 tracking-tight">
           Personal Information
         </h2>
 
@@ -99,33 +105,41 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label
+              htmlFor="fullName"
+              className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide"
+            >
               Full Name
             </label>
             <input
+              id="fullName"
               type="text"
               name="fullName"
               value={data.fullName}
               onChange={handleChange}
               placeholder="John Doe"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label
+              htmlFor="jobTitle"
+              className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide"
+            >
               Professional Title
             </label>
             <input
+              id="jobTitle"
               type="text"
               name="jobTitle"
               value={data.jobTitle}
               onChange={handleChange}
               placeholder="Frontend Developer"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
               Email
             </label>
             <input
@@ -134,11 +148,11 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.email}
               onChange={handleChange}
               placeholder="john@example.com"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
               Phone
             </label>
             <input
@@ -147,11 +161,11 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.phone}
               onChange={handleChange}
               placeholder="+1 234 567 890"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
               Location
             </label>
             <input
@@ -160,11 +174,11 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.location}
               onChange={handleChange}
               placeholder="City, Country"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
               Website
             </label>
             <input
@@ -173,11 +187,11 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.website}
               onChange={handleChange}
               placeholder="https://johndoe.com"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
               LinkedIn
             </label>
             <input
@@ -186,11 +200,11 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.linkedin}
               onChange={handleChange}
               placeholder="linkedin.com/in/johndoe"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
               GitHub
             </label>
             <input
@@ -199,11 +213,11 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.github || ""}
               onChange={handleChange}
               placeholder="github.com/johndoe"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+            <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
               Portfolio URL (For QR)
             </label>
             <input
@@ -212,7 +226,7 @@ export function PersonalInfoForm({ resume }: { resume: Resume }) {
               value={data.portfolio || ""}
               onChange={handleChange}
               placeholder="https://johndoe.dev"
-              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
             />
           </div>
         </div>

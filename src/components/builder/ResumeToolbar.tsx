@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import React, { useState, useRef } from "react";
 import Link from "next/link";
-import { getSafeFontCss } from "@/lib/pdf/inlineStyles";
+import { generateResumePdf } from "@/lib/pdf/generatePdf";
+import { useToastStore } from "@/store/toastStore";
 
 const TEMPLATES: ResumeTemplate[] = [
   "modern",
@@ -62,16 +63,21 @@ export function ResumeToolbar({
     // Validate file size (max 5MB — a resume JSON should never be this large)
     const MAX_SIZE_BYTES = 5 * 1024 * 1024;
     if (file.size > MAX_SIZE_BYTES) {
-      alert(
-        "File is too large. Please import a valid resume JSON file (max 5MB).",
-      );
+      useToastStore
+        .getState()
+        .addToast(
+          "File is too large. Please import a valid resume JSON file (max 5MB).",
+          "error",
+        );
       e.target.value = "";
       return;
     }
 
     // Validate file type
     if (!file.name.endsWith(".json") && file.type !== "application/json") {
-      alert("Invalid file type. Please import a .json file.");
+      useToastStore
+        .getState()
+        .addToast("Invalid file type. Please import a .json file.", "error");
       e.target.value = "";
       return;
     }
@@ -117,21 +123,31 @@ export function ResumeToolbar({
             template: importedData.template || resume.template,
             colorTheme: importedData.colorTheme || resume.colorTheme,
           });
-          alert("Resume imported successfully!");
+          useToastStore
+            .getState()
+            .addToast("Resume imported successfully!", "success");
         } else {
-          alert(
-            "Invalid resume format. The file does not appear to be a valid HireCraft resume backup.",
-          );
+          useToastStore
+            .getState()
+            .addToast(
+              "Invalid resume format. The file does not appear to be a valid HireCraft resume backup.",
+              "error",
+            );
         }
       } catch {
-        alert(
-          "Failed to parse the file. Please ensure it is a valid JSON file.",
-        );
+        useToastStore
+          .getState()
+          .addToast(
+            "Failed to parse the file. Please ensure it is a valid JSON file.",
+            "error",
+          );
       }
       e.target.value = "";
     };
     reader.onerror = () => {
-      alert("Unable to read the file. Please try again.");
+      useToastStore
+        .getState()
+        .addToast("Unable to read the file. Please try again.", "error");
       e.target.value = "";
     };
     reader.readAsText(file);
@@ -141,211 +157,38 @@ export function ResumeToolbar({
     try {
       setIsGeneratingPDF(true);
 
-      const { toCanvas } = await import("html-to-image");
-      const { jsPDF } = await import("jspdf");
-
       const element = document.getElementById("resume-preview-paper");
       if (!element) return;
 
-      const originalTransform = element.style.transform;
-      element.style.transform = "scale(1)";
-
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      const safeFontCss = getSafeFontCss();
-
-      const sourceCanvas = await toCanvas(element, {
-        quality: 0.98,
-        backgroundColor: "#ffffff",
-        pixelRatio: 2,
-        fontEmbedCSS: safeFontCss,
-      });
-
-      element.style.transform = originalTransform;
-
-      const a4WidthMm = 210;
-      const a4HeightMm = 297;
-      const pxPerMm = sourceCanvas.width / a4WidthMm;
-
-      const bottomMarginMm = 10;
-      const topMarginMm = 10; // For page 2+
-
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-      });
-
-      const ctx = sourceCanvas.getContext("2d");
-      let yOffset = 0;
-      let pageNum = 1;
-      const sliceHeights: number[] = [];
-
-      const findSafeSliceY = (startY: number, targetY: number) => {
-        if (!ctx) return targetY;
-        const scanLimit = Math.max(startY, targetY - 800);
-        const heightToScan = targetY - scanLimit;
-        if (heightToScan <= 0) return targetY;
-
-        const imgData = ctx.getImageData(
-          0,
-          scanLimit,
-          sourceCanvas.width,
-          heightToScan,
-        );
-        const data = imgData.data;
-        const rowBytes = sourceCanvas.width * 4;
-
-        const rowsAreIdentical = (r1: number, r2: number) => {
-          const o1 = r1 * rowBytes;
-          const o2 = r2 * rowBytes;
-          for (let i = 0; i < rowBytes; i++) {
-            if (data[o1 + i] !== data[o2 + i]) return false;
-          }
-          return true;
-        };
-
-        let identicalCount = 0;
-        for (let y = heightToScan - 1; y > 0; y--) {
-          if (rowsAreIdentical(y, y - 1)) {
-            identicalCount++;
-            if (identicalCount >= 15) {
-              return scanLimit + y + 7; // Return middle of gap
-            }
-          } else {
-            identicalCount = 0;
-          }
-        }
-        return targetY;
-      };
-
-      while (yOffset < sourceCanvas.height) {
-        if (pageNum > 1) pdf.addPage();
-
-        const currentTopMarginMm = pageNum > 1 ? topMarginMm : 0;
-        const availableHeightMm =
-          a4HeightMm - currentTopMarginMm - bottomMarginMm;
-        const maxSlicePx = availableHeightMm * pxPerMm;
-
-        let sliceHeight = Math.min(maxSlicePx, sourceCanvas.height - yOffset);
-
-        if (yOffset + sliceHeight < sourceCanvas.height) {
-          const safeY = findSafeSliceY(yOffset, yOffset + sliceHeight);
-          sliceHeight = safeY - yOffset;
-        }
-
-        const sliceCanvas = document.createElement("canvas");
-        sliceCanvas.width = sourceCanvas.width;
-        sliceCanvas.height = sliceHeight;
-        const sCtx = sliceCanvas.getContext("2d");
-
-        if (sCtx) {
-          sCtx.fillStyle = "#ffffff";
-          sCtx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
-          sCtx.drawImage(
-            sourceCanvas,
-            0,
-            yOffset,
-            sourceCanvas.width,
-            sliceHeight,
-            0,
-            0,
-            sliceCanvas.width,
-            sliceHeight,
-          );
-        }
-
-        const sliceData = sliceCanvas.toDataURL("image/jpeg", 0.98);
-        const printHeightMm = sliceHeight / pxPerMm;
-
-        pdf.addImage(
-          sliceData,
-          "JPEG",
-          0,
-          currentTopMarginMm,
-          a4WidthMm,
-          printHeightMm,
-        );
-
-        sliceHeights.push(sliceHeight);
-        yOffset += sliceHeight;
-        pageNum++;
-      }
-
-      // Add clickable links programmatically
-      const links = element.querySelectorAll("a");
-      const elementRect = element.getBoundingClientRect();
-      const pxRatio = sourceCanvas.width / elementRect.width;
-
-      links.forEach((link) => {
-        const href = link.getAttribute("href");
-        if (!href) return;
-
-        const rect = link.getBoundingClientRect();
-
-        const relX = rect.left - elementRect.left;
-        const relY = rect.top - elementRect.top;
-        const relW = rect.width;
-        const relH = rect.height;
-
-        const canvasX = relX * pxRatio;
-        const canvasY = relY * pxRatio;
-        const canvasW = relW * pxRatio;
-        const canvasH = relH * pxRatio;
-
-        let pNum = 1;
-        let currentSliceY = 0;
-        let pageSliceHeight = sliceHeights[0];
-
-        while (
-          pNum <= sliceHeights.length &&
-          canvasY >= currentSliceY + pageSliceHeight
-        ) {
-          currentSliceY += pageSliceHeight;
-          pNum++;
-          pageSliceHeight = sliceHeights[pNum - 1];
-        }
-
-        if (pNum <= sliceHeights.length) {
-          const yOnPageCanvas = canvasY - currentSliceY;
-
-          const pageTopMarginMm = pNum > 1 ? topMarginMm : 0;
-
-          const mmX = canvasX / pxPerMm;
-          const mmY = yOnPageCanvas / pxPerMm + pageTopMarginMm;
-          const mmW = canvasW / pxPerMm;
-          const mmH = canvasH / pxPerMm;
-
-          pdf.setPage(pNum);
-          pdf.link(mmX, mmY, mmW, mmH, { url: href });
-        }
-      });
-
-      pdf.save(
-        `${resume.data.personalInfo.fullName?.replace(/\s+/g, "_") || "Resume"}.pdf`,
-      );
+      const filename = `${resume.data.personalInfo.fullName?.replace(/\s+/g, "_") || "Resume"}.pdf`;
+      await generateResumePdf(element, filename);
     } catch (error) {
       console.error("Failed to generate PDF", error);
-      alert("Failed to generate PDF. Please try Print -> Save as PDF instead.");
+      useToastStore
+        .getState()
+        .addToast(
+          "Failed to generate PDF. Please try Print -> Save as PDF instead.",
+          "error",
+        );
     } finally {
       setIsGeneratingPDF(false);
     }
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shrink-0 print:hidden gap-4">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-5 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md border-b border-gray-200 dark:border-neutral-800 shrink-0 print:hidden gap-4 sticky top-0 z-30">
       {/* Mobile Toggle View */}
       {setMobileView && (
-        <div className="flex w-full lg:hidden border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden shrink-0">
+        <div className="flex w-full lg:hidden border border-gray-200 dark:border-neutral-800 rounded-xl overflow-hidden shrink-0 shadow-sm p-1 bg-gray-50/50 dark:bg-neutral-900/50">
           <button
             onClick={() => setMobileView("edit")}
-            className={`flex-1 flex justify-center items-center gap-2 py-2 text-sm font-medium transition-colors ${mobileView === "edit" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30" : "bg-white text-gray-600 dark:bg-neutral-900 dark:text-gray-300"}`}
+            className={`flex-1 flex justify-center items-center gap-2 py-2 rounded-lg text-sm font-semibold transition-all ${mobileView === "edit" ? "bg-white text-blue-600 shadow-sm dark:bg-neutral-800 dark:text-blue-400" : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"}`}
           >
             <Edit className="w-4 h-4" /> Edit
           </button>
           <button
             onClick={() => setMobileView("preview")}
-            className={`flex-1 flex justify-center items-center gap-2 py-2 text-sm font-medium transition-colors ${mobileView === "preview" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30" : "bg-white text-gray-600 dark:bg-neutral-900 dark:text-gray-300"}`}
+            className={`flex-1 flex justify-center items-center gap-2 py-2 rounded-lg text-sm font-semibold transition-all ${mobileView === "preview" ? "bg-white text-blue-600 shadow-sm dark:bg-neutral-800 dark:text-blue-400" : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"}`}
           >
             <Eye className="w-4 h-4" /> Preview
           </button>
@@ -355,13 +198,13 @@ export function ResumeToolbar({
       <div className="flex items-center gap-6 w-full sm:w-auto flex-wrap sm:pb-0">
         {/* Template Selector */}
         <div className="flex items-center gap-2 shrink-0">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden md:block">
-            Template:
+          <label className="text-[13px] font-semibold text-gray-500 dark:text-gray-400 hidden md:block uppercase tracking-wider">
+            Template
           </label>
           <select
             value={resume.template}
             onChange={handleTemplateChange}
-            className="text-sm border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1.5 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-1 focus:ring-blue-500 capitalize min-w-[120px]"
+            className="text-sm font-medium border border-gray-300 dark:border-neutral-700 rounded-xl px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 capitalize min-w-[130px] shadow-sm transition-all"
           >
             {TEMPLATES.map((t) => (
               <option key={t} value={t}>
@@ -372,7 +215,7 @@ export function ResumeToolbar({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-end sm:self-auto">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 self-end sm:self-auto">
         <button
           onClick={() => {
             if (
@@ -384,46 +227,49 @@ export function ResumeToolbar({
             }
           }}
           title="Start Fresh (Clear Data)"
-          className="flex items-center gap-1.5 text-sm px-2.5 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 transition-colors font-medium mr-1"
+          className="flex items-center gap-1.5 text-sm px-3 py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 transition-colors font-semibold mr-1"
         >
           <RotateCcw className="w-4 h-4" />{" "}
           <span className="hidden lg:inline">Start Fresh</span>
         </button>
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 hidden sm:block"></div>
-        <input
-          type="file"
-          accept=".json"
-          ref={fileInputRef}
-          onChange={handleImportJSON}
-          className="hidden"
-        />
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          title="Import JSON Backup"
-          className="p-1.5 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >
-          <Upload className="w-5 h-5" />
-        </button>
-        <button
-          onClick={handleExportJSON}
-          title="Export JSON Backup"
-          className="p-1.5 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >
-          <FileJson className="w-5 h-5" />
-        </button>
+        <div className="w-px h-6 bg-gray-200 dark:bg-neutral-800 mx-1 hidden sm:block"></div>
 
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 hidden sm:block"></div>
+        <div className="flex items-center bg-gray-50/50 dark:bg-neutral-900/50 p-1 rounded-xl border border-gray-200/50 dark:border-neutral-800/50">
+          <input
+            type="file"
+            accept=".json"
+            ref={fileInputRef}
+            onChange={handleImportJSON}
+            className="hidden"
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            title="Import JSON Backup"
+            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-white hover:shadow-sm dark:hover:bg-neutral-800 dark:hover:text-blue-400 transition-all rounded-lg"
+          >
+            <Upload className="w-[18px] h-[18px]" />
+          </button>
+          <button
+            onClick={handleExportJSON}
+            title="Export JSON Backup"
+            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-white hover:shadow-sm dark:hover:bg-neutral-800 dark:hover:text-blue-400 transition-all rounded-lg"
+          >
+            <FileJson className="w-[18px] h-[18px]" />
+          </button>
+        </div>
+
+        <div className="w-px h-6 bg-gray-200 dark:bg-neutral-800 mx-1 hidden sm:block"></div>
 
         <Link
           href={`/builder/${resume.id}/design`}
-          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50 transition-colors font-medium mr-1"
+          className="flex items-center gap-2 text-sm px-4 py-2 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50 transition-colors font-semibold shadow-sm"
         >
           <Edit className="w-4 h-4" />{" "}
           <span className="hidden sm:inline">Design Mode</span>
         </Link>
         <button
           onClick={() => window.print()}
-          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors font-medium"
+          className="flex items-center gap-2 text-sm px-4 py-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 transition-colors font-semibold shadow-sm"
         >
           <Printer className="w-4 h-4" />{" "}
           <span className="hidden sm:inline">Print</span>
@@ -431,7 +277,7 @@ export function ResumeToolbar({
         <button
           onClick={handleDownloadPDF}
           disabled={isGeneratingPDF}
-          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed transition-colors font-medium shadow-sm"
+          className="flex items-center gap-2 text-sm px-5 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed transition-all font-semibold shadow-sm hover:shadow-md transform hover:scale-[1.02]"
         >
           {isGeneratingPDF ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -439,7 +285,7 @@ export function ResumeToolbar({
             <Download className="w-4 h-4" />
           )}
           <span className="hidden sm:inline">
-            {isGeneratingPDF ? "Generating..." : "PDF"}
+            {isGeneratingPDF ? "Generating..." : "Download PDF"}
           </span>
         </button>
       </div>

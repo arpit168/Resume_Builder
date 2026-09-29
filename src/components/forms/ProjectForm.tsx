@@ -132,7 +132,7 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                   <div className="p-4 space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Project Name
                         </label>
                         <input
@@ -144,11 +144,11 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. E-Commerce Platform"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Technologies Used
                         </label>
                         <input
@@ -160,11 +160,11 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. React, Node.js, MongoDB"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Live URL (Optional)
                         </label>
                         <input
@@ -176,11 +176,11 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="https://myproject.com"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Description
                         </label>
                         <textarea

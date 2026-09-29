@@ -135,7 +135,7 @@ export function CustomSectionForm({ resume }: { resume: Resume }) {
                   <div className="p-4 space-y-4">
                     <div className="grid grid-cols-1 gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Section Title
                         </label>
                         <input
@@ -147,11 +147,11 @@ export function CustomSectionForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. Volunteering, Publications, Hobbies"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                        <label className="block text-[13px] font-semibold mb-1.5 text-gray-700 dark:text-gray-300 tracking-wide">
                           Content
                         </label>
                         <textarea
@@ -162,7 +162,7 @@ export function CustomSectionForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="Provide details for this section..."
-                          className="w-full h-32 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                          className="w-full h-32 border border-gray-300 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-neutral-950/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm hover:border-gray-400 dark:hover:border-neutral-600 resize-y"
                         />
                       </div>
                     </div>

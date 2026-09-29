@@ -1,57 +1,62 @@
 import { test, expect } from "@playwright/test";
 
-test("complete resume creation flow", async ({ page }) => {
-  // 1. Homepage
-  await page.goto("/");
-  await expect(page).toHaveTitle(/Hire-Craft|Resume/);
+test.describe("Resume Builder Flow", () => {
+  test("creates a resume, persists data, and handles PDF export", async ({
+    page,
+  }) => {
+    // 1. Visit homepage and navigate to dashboard
+    await page.goto("/");
+    await expect(page).toHaveTitle(/Hire-Craft|Resume Builder/i);
 
-  // 2. Create Resume (assuming there's a button like "Create Resume" or "Get Started")
-  // Using generic selectors that would typically match
-  const createBtn = page.getByRole("button", { name: /create|start/i }).first();
-  if (await createBtn.isVisible()) {
-    await createBtn.click();
-  } else {
-    // Fallback if we need to navigate directly
+    // 2. Go to Dashboard and create a resume
     await page.goto("/dashboard");
-    await page
-      .getByRole("button", { name: /create/i })
-      .first()
-      .click();
-  }
+    const createBtn = page.getByRole("button", {
+      name: "Create Resume",
+    });
+    await createBtn.waitFor({ state: "visible" });
+    await createBtn.click();
 
-  // 3. Wait for editor to load (URL should change to /builder/[id])
-  await page.waitForURL(/\/builder\/.+/);
+    // Wait for the builder to load by waiting for a specific form element
+    const fullNameInput = page.getByLabel("Full Name");
+    await fullNameInput.waitFor({ state: "visible", timeout: 15000 });
 
-  // 4. Personal Information (assuming basic labels)
-  const nameInput = page.getByLabel(/name|full name/i).first();
-  if (await nameInput.isVisible()) {
-    await nameInput.fill("Jane Doe E2E Test");
-  }
+    // 3. Form Input test (Personal Info)
+    await fullNameInput.fill("E2E Test User");
 
-  // 5. Save and reload to test persistence
-  await page.reload();
-  await page.waitForLoadState("networkidle");
+    const jobTitleInput = page.getByLabel("Professional Title");
+    await jobTitleInput.waitFor({ state: "visible" });
+    await jobTitleInput.fill("Senior Quality Engineer");
 
-  // Verify data remains
-  if (await nameInput.isVisible()) {
-    await expect(nameInput).toHaveValue("Jane Doe E2E Test");
-  }
+    // 4. Validate data is shown in the preview
+    // The preview should contain the text we just typed
+    const previewContainer = page.locator("#resume-preview-paper");
+    await expect(previewContainer).toContainText("E2E Test User");
+    await expect(previewContainer).toContainText("Senior Quality Engineer");
 
-  // 6. Export PDF
-  // We cannot easily test the exact PDF bytes here natively without external libs,
-  // but we can verify the button triggers the process.
-  const exportBtn = page.getByRole("button", { name: /pdf/i }).first();
-  if (await exportBtn.isVisible()) {
-    // Wait for the download event
-    const downloadPromise = page
-      .waitForEvent("download", { timeout: 10000 })
-      .catch(() => null);
-    await exportBtn.click();
+    // 5. Test persistence by reloading
+    await page.reload();
+    await fullNameInput.waitFor({ state: "visible", timeout: 15000 });
+
+    // Ensure inputs still have the value
+    await expect(page.getByLabel("Full Name")).toHaveValue("E2E Test User");
+    await expect(page.getByLabel("Professional Title")).toHaveValue(
+      "Senior Quality Engineer",
+    );
+
+    // 6. Test PDF Export
+    const downloadBtn = page.getByRole("button", { name: /Download PDF|PDF/i });
+    await expect(downloadBtn).toBeVisible();
+
+    // Trigger download and catch the event
+    const downloadPromise = page.waitForEvent("download");
+    await downloadBtn.click();
 
     const download = await downloadPromise;
-    if (download) {
-      // Just verifying a file was triggered
-      expect(download.suggestedFilename()).toMatch(/\.pdf$/i);
-    }
-  }
+    // Verify filename matches the expected format (e.g. name_backup.pdf or similar)
+    // In our app it uses fullName with spaces replaced by underscores + .pdf
+    expect(download.suggestedFilename()).toBe("E2E_Test_User.pdf");
+
+    // Verify it doesn't crash the page after download
+    await expect(page.getByLabel("Full Name")).toBeVisible();
+  });
 });

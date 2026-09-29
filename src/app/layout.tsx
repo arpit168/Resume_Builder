@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ScreenWarningModal } from "@/components/layout/ScreenWarningModal";
+import { ToastContainer } from "@/components/ui/ToastContainer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -87,6 +88,7 @@ export default function RootLayout({
             <Header />
             <main className="flex-grow flex flex-col">{children}</main>
             <Footer />
+            <ToastContainer />
           </InitialLoaderWrapper>
         </ThemeProvider>
       </body>
