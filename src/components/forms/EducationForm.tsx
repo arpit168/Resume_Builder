@@ -55,7 +55,7 @@ export function EducationForm({ resume }: { resume: Resume }) {
       </div>
 
       {educations.length === 0 ? (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-neutral-900/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
           <p>No education added yet.</p>
           <button
             onClick={handleAdd}
@@ -72,11 +72,11 @@ export function EducationForm({ resume }: { resume: Resume }) {
             return (
               <div
                 key={edu.id}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800 transition-all"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-neutral-900 transition-all"
               >
                 {/* Header */}
                 <div
-                  className={`flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors ${isExpanded ? "border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/80" : ""}`}
+                  className={`flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors ${isExpanded ? "border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-neutral-900/80" : ""}`}
                   onClick={() => setExpandedId(isExpanded ? null : edu.id)}
                 >
                   <div className="flex items-center gap-3">
@@ -146,7 +146,7 @@ export function EducationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. Bachelor of Science in Computer Science"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -162,7 +162,7 @@ export function EducationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. Stanford University"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -178,7 +178,7 @@ export function EducationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. Stanford, CA"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -194,7 +194,7 @@ export function EducationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. 3.8/4.0"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -209,7 +209,7 @@ export function EducationForm({ resume }: { resume: Resume }) {
                               startDate: e.target.value,
                             })
                           }
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -224,7 +224,7 @@ export function EducationForm({ resume }: { resume: Resume }) {
                               endDate: e.target.value,
                             })
                           }
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div className="md:col-span-2">
@@ -239,7 +239,7 @@ export function EducationForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="Relevant courses, thesis, honors, etc."
-                          className="w-full h-24 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                          className="w-full h-24 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
                         />
                       </div>
                     </div>

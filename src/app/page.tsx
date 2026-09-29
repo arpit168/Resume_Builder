@@ -17,7 +17,7 @@ import { Particles } from "@/components/layout/Particles";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-[calc(100vh-5rem)] bg-white dark:bg-[#080B14] font-sans overflow-hidden relative">
+    <div className="flex flex-col min-h-[calc(100vh-5rem)] bg-white dark:bg-black font-sans overflow-hidden relative">
       {/* Background Blobs */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-100/40 dark:bg-blue-600/10 blur-[100px] rounded-full pointer-events-none -z-10 translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[800px] h-[500px] bg-blue-50/60 dark:bg-blue-900/20 blur-[120px] rounded-full pointer-events-none -z-10 -translate-x-1/4 translate-y-1/4" />
@@ -190,21 +190,21 @@ export default function Home() {
                   <div className="flex gap-2">
                     <div className="w-1/3 aspect-[1/1.4] bg-white dark:bg-blue-900/10 border-2 border-blue-500 rounded flex flex-col p-1 shadow-sm">
                       <div className="w-full h-1/4 bg-blue-100 dark:bg-blue-900/40 rounded-sm mb-1"></div>
-                      <div className="w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full mb-0.5"></div>
-                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
+                      <div className="w-full h-1 bg-gray-100 dark:bg-neutral-900 rounded-full mb-0.5"></div>
+                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-neutral-900 rounded-full"></div>
                     </div>
                     <div className="w-1/3 aspect-[1/1.4] bg-white dark:bg-[#1A2234] border border-gray-200 dark:border-gray-700/50 rounded flex flex-col p-1 shadow-sm">
-                      <div className="w-full h-2 bg-gray-100 dark:bg-gray-800 rounded-sm mb-1"></div>
-                      <div className="w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full mb-0.5"></div>
-                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
+                      <div className="w-full h-2 bg-gray-100 dark:bg-neutral-900 rounded-sm mb-1"></div>
+                      <div className="w-full h-1 bg-gray-100 dark:bg-neutral-900 rounded-full mb-0.5"></div>
+                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-neutral-900 rounded-full"></div>
                     </div>
                     <div className="w-1/3 aspect-[1/1.4] bg-white dark:bg-[#1A2234] border border-gray-200 dark:border-gray-700/50 rounded flex flex-col p-1 shadow-sm">
                       <div className="flex gap-1 mb-1">
-                        <div className="w-1/3 h-4 bg-gray-100 dark:bg-gray-800 rounded-sm"></div>
-                        <div className="w-2/3 h-4 bg-gray-100 dark:bg-gray-800 rounded-sm"></div>
+                        <div className="w-1/3 h-4 bg-gray-100 dark:bg-neutral-900 rounded-sm"></div>
+                        <div className="w-2/3 h-4 bg-gray-100 dark:bg-neutral-900 rounded-sm"></div>
                       </div>
-                      <div className="w-full h-1 bg-gray-100 dark:bg-gray-800 rounded-full mb-0.5"></div>
-                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
+                      <div className="w-full h-1 bg-gray-100 dark:bg-neutral-900 rounded-full mb-0.5"></div>
+                      <div className="w-3/4 h-1 bg-gray-100 dark:bg-neutral-900 rounded-full"></div>
                     </div>
                   </div>
                 </div>
@@ -259,7 +259,7 @@ export default function Home() {
               <div className="flex-1 bg-gray-100/50 dark:bg-black/20 p-4 sm:p-5 flex items-center justify-center border-l border-gray-200 dark:border-gray-800/60 relative">
                 {/* Top header with icons */}
                 <div className="absolute top-4 right-4 flex gap-2">
-                  <div className="w-4 h-4 rounded-full bg-gray-200/50 dark:bg-gray-800/50 flex items-center justify-center">
+                  <div className="w-4 h-4 rounded-full bg-gray-200/50 dark:bg-neutral-900/50 flex items-center justify-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
                   </div>
                   <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">

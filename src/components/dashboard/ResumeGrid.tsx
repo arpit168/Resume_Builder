@@ -36,7 +36,7 @@ export function ResumeGrid() {
             placeholder="Search resumes..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <button
@@ -49,7 +49,7 @@ export function ResumeGrid() {
       </div>
 
       {filteredResumes.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="text-center py-16 bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-medium mb-2">No resumes found</h3>
           <p className="text-gray-500 dark:text-gray-400 mb-4">
             {search

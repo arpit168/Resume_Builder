@@ -55,7 +55,7 @@ export function ExperienceForm({ resume }: { resume: Resume }) {
       </div>
 
       {experiences.length === 0 ? (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-neutral-900/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
           <p>No work experience added yet.</p>
           <button
             onClick={handleAdd}
@@ -72,11 +72,11 @@ export function ExperienceForm({ resume }: { resume: Resume }) {
             return (
               <div
                 key={exp.id}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800 transition-all"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-neutral-900 transition-all"
               >
                 {/* Header */}
                 <div
-                  className={`flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors ${isExpanded ? "border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/80" : ""}`}
+                  className={`flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors ${isExpanded ? "border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-neutral-900/80" : ""}`}
                   onClick={() => setExpandedId(isExpanded ? null : exp.id)}
                 >
                   <div className="flex items-center gap-3">
@@ -146,7 +146,7 @@ export function ExperienceForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. Software Engineer"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -162,7 +162,7 @@ export function ExperienceForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. Google"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -178,7 +178,7 @@ export function ExperienceForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. New York, NY"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div className="flex items-center gap-2 pt-6">
@@ -212,7 +212,7 @@ export function ExperienceForm({ resume }: { resume: Resume }) {
                               startDate: e.target.value,
                             })
                           }
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -228,7 +228,7 @@ export function ExperienceForm({ resume }: { resume: Resume }) {
                             })
                           }
                           disabled={exp.current}
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                       </div>
                       <div className="md:col-span-2">
@@ -243,7 +243,7 @@ export function ExperienceForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="Describe your responsibilities, achievements, and technologies used..."
-                          className="w-full h-32 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                          className="w-full h-32 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
                         />
                       </div>
                     </div>

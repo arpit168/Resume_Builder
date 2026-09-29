@@ -35,7 +35,7 @@ export function SummaryForm({ resume }: { resume: Resume }) {
           value={summary}
           onChange={handleChange}
           placeholder="e.g. Passionate and detail-oriented Frontend Developer with 5+ years of experience building responsive web applications..."
-          className="w-full h-40 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+          className="w-full h-40 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
         />
       </div>
     </div>

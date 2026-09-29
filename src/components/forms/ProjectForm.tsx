@@ -53,7 +53,7 @@ export function ProjectForm({ resume }: { resume: Resume }) {
       </div>
 
       {projects.length === 0 ? (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-neutral-900/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
           <p>No projects added yet.</p>
           <button
             onClick={handleAdd}
@@ -70,11 +70,11 @@ export function ProjectForm({ resume }: { resume: Resume }) {
             return (
               <div
                 key={project.id}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800 transition-all"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-neutral-900 transition-all"
               >
                 {/* Header */}
                 <div
-                  className={`flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors ${isExpanded ? "border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/80" : ""}`}
+                  className={`flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/80 transition-colors ${isExpanded ? "border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-neutral-900/80" : ""}`}
                   onClick={() => setExpandedId(isExpanded ? null : project.id)}
                 >
                   <div className="flex items-center gap-3">
@@ -144,7 +144,7 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. E-Commerce Platform"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div className="md:col-span-2">
@@ -160,7 +160,7 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="e.g. React, Node.js, MongoDB"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div className="md:col-span-2">
@@ -176,7 +176,7 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="https://myproject.com"
-                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div className="md:col-span-2">
@@ -191,7 +191,7 @@ export function ProjectForm({ resume }: { resume: Resume }) {
                             })
                           }
                           placeholder="Describe the project, your role, and what you accomplished..."
-                          className="w-full h-24 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                          className="w-full h-24 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
                         />
                       </div>
                     </div>

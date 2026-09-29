@@ -418,7 +418,7 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden select-none">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-black overflow-hidden select-none">
       <DesignStyleInjector design={resume.design} />
       <DesignToolbar
         resume={resume}
@@ -431,7 +431,7 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left Panel (Global settings) */}
-        <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 hidden md:flex flex-col p-4 shrink-0 overflow-y-auto">
+        <div className="w-64 bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 hidden md:flex flex-col p-4 shrink-0 overflow-y-auto">
           <h2 className="font-bold text-gray-900 dark:text-white mb-4">
             Design Editor
           </h2>
@@ -446,43 +446,43 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
             </h3>
             <ul className="text-xs text-gray-500 space-y-1.5">
               <li>
-                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                <kbd className="bg-gray-100 dark:bg-neutral-900 px-1 rounded">
                   Click
                 </kbd>{" "}
                 Select element
               </li>
               <li>
-                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                <kbd className="bg-gray-100 dark:bg-neutral-900 px-1 rounded">
                   Esc
                 </kbd>{" "}
                 Deselect
               </li>
               <li>
-                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                <kbd className="bg-gray-100 dark:bg-neutral-900 px-1 rounded">
                   Arrow keys
                 </kbd>{" "}
                 Nudge 2px
               </li>
               <li>
-                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                <kbd className="bg-gray-100 dark:bg-neutral-900 px-1 rounded">
                   Shift+Arrow
                 </kbd>{" "}
                 Nudge 10px
               </li>
               <li>
-                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                <kbd className="bg-gray-100 dark:bg-neutral-900 px-1 rounded">
                   Ctrl+Z
                 </kbd>{" "}
                 Undo
               </li>
               <li>
-                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                <kbd className="bg-gray-100 dark:bg-neutral-900 px-1 rounded">
                   Ctrl+Y
                 </kbd>{" "}
                 Redo
               </li>
               <li>
-                <kbd className="bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                <kbd className="bg-gray-100 dark:bg-neutral-900 px-1 rounded">
                   ?
                 </kbd>{" "}
                 All shortcuts
@@ -492,7 +492,7 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
         </div>
 
         {/* Canvas Center */}
-        <div className="flex-1 relative bg-gray-100 dark:bg-gray-800/50 overflow-hidden flex flex-col">
+        <div className="flex-1 relative bg-gray-100 dark:bg-neutral-900/50 overflow-hidden flex flex-col">
           <DesignCanvas
             resume={resume}
             selectedSelector={selectedSelector}
@@ -504,7 +504,7 @@ export function DesignEditorView({ resumeId }: { resumeId: string }) {
         </div>
 
         {/* Right Panel (Element Properties) */}
-        <div className="w-80 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800 flex flex-col shrink-0 overflow-y-auto z-10">
+        <div className="w-80 bg-white dark:bg-black border-l border-gray-200 dark:border-gray-800 flex flex-col shrink-0 overflow-y-auto z-10">
           <DesignSidebar resume={resume} selectedSelector={selectedSelector} />
         </div>
       </div>

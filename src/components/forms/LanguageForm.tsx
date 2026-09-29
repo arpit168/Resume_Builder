@@ -52,7 +52,7 @@ export function LanguageForm({ resume }: { resume: Resume }) {
       </div>
 
       {languages.length === 0 ? (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-neutral-900/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
           <p>No languages added yet.</p>
           <button
             onClick={handleAdd}
@@ -66,7 +66,7 @@ export function LanguageForm({ resume }: { resume: Resume }) {
           {languages.map((lang, index) => (
             <div
               key={lang.id}
-              className="flex flex-col gap-2 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm group"
+              className="flex flex-col gap-2 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-neutral-900 shadow-sm group"
             >
               <div className="flex items-center gap-2">
                 <div className="flex flex-col -ml-1">
@@ -113,7 +113,7 @@ export function LanguageForm({ resume }: { resume: Resume }) {
                       proficiency: e.target.value,
                     })
                   }
-                  className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-md px-2 py-1 bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-600 dark:text-gray-300"
+                  className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-md px-2 py-1 bg-gray-50 dark:bg-black focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-600 dark:text-gray-300"
                 >
                   <option value="">Don&apos;t show proficiency</option>
                   {PROFICIENCY_LEVELS.map((lvl) => (

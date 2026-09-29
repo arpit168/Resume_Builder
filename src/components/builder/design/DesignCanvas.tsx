@@ -364,7 +364,7 @@ export function DesignCanvas({
       </div>
 
       {/* Floating Canvas Controls */}
-      <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-1.5 z-20">
+      <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-white dark:bg-neutral-900 shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-1.5 z-20">
         {/* Keyboard Shortcuts — calls parent handler directly instead of dispatching fake KeyboardEvent */}
         <button
           onClick={() => onOpenShortcuts?.()}

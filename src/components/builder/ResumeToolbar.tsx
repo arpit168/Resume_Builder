@@ -333,19 +333,19 @@ export function ResumeToolbar({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shrink-0 print:hidden gap-4">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shrink-0 print:hidden gap-4">
       {/* Mobile Toggle View */}
       {setMobileView && (
         <div className="flex w-full lg:hidden border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden shrink-0">
           <button
             onClick={() => setMobileView("edit")}
-            className={`flex-1 flex justify-center items-center gap-2 py-2 text-sm font-medium transition-colors ${mobileView === "edit" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30" : "bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-300"}`}
+            className={`flex-1 flex justify-center items-center gap-2 py-2 text-sm font-medium transition-colors ${mobileView === "edit" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30" : "bg-white text-gray-600 dark:bg-neutral-900 dark:text-gray-300"}`}
           >
             <Edit className="w-4 h-4" /> Edit
           </button>
           <button
             onClick={() => setMobileView("preview")}
-            className={`flex-1 flex justify-center items-center gap-2 py-2 text-sm font-medium transition-colors ${mobileView === "preview" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30" : "bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-300"}`}
+            className={`flex-1 flex justify-center items-center gap-2 py-2 text-sm font-medium transition-colors ${mobileView === "preview" ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30" : "bg-white text-gray-600 dark:bg-neutral-900 dark:text-gray-300"}`}
           >
             <Eye className="w-4 h-4" /> Preview
           </button>
@@ -361,7 +361,7 @@ export function ResumeToolbar({
           <select
             value={resume.template}
             onChange={handleTemplateChange}
-            className="text-sm border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1.5 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500 capitalize min-w-[120px]"
+            className="text-sm border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1.5 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-1 focus:ring-blue-500 capitalize min-w-[120px]"
           >
             {TEMPLATES.map((t) => (
               <option key={t} value={t}>

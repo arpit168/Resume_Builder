@@ -93,7 +93,7 @@ export function ScreenWarningModal() {
             className={`w-full py-3 px-4 rounded-xl font-semibold transition-all flex justify-center items-center gap-2 ${
               canClose
                 ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25"
-                : "bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                : "bg-gray-200 dark:bg-neutral-900 text-gray-400 cursor-not-allowed"
             }`}
           >
             {canClose ? (
@@ -109,7 +109,7 @@ export function ScreenWarningModal() {
 
         {/* Progress bar */}
         {!isPaused && (
-          <div className="h-1 w-full bg-gray-100 dark:bg-gray-800">
+          <div className="h-1 w-full bg-gray-100 dark:bg-neutral-900">
             <div
               className="h-full bg-blue-600 transition-all duration-1000 ease-linear"
               style={{ width: `${(timeLeft / TOTAL_SECONDS) * 100}%` }}

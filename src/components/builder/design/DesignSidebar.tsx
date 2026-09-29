@@ -104,8 +104,8 @@ export function DesignSidebar({
   const WEIGHTS = ["300", "400", "500", "600", "700", "800"];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-900 overflow-y-auto">
-      <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-900 z-10">
+    <div className="flex-1 flex flex-col h-full bg-white dark:bg-black overflow-y-auto">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white dark:bg-black z-10">
         <h2 className="font-bold text-gray-900 dark:text-white text-sm">
           Element Properties
         </h2>
@@ -125,7 +125,7 @@ export function DesignSidebar({
               <select
                 value={currentDesign.fontFamily || ""}
                 onChange={(e) => handleUpdate({ fontFamily: e.target.value })}
-                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
               >
                 <option value="">Default</option>
                 {FONTS.map((f) => (
@@ -144,7 +144,7 @@ export function DesignSidebar({
                 <select
                   value={currentDesign.fontSize || ""}
                   onChange={(e) => handleUpdate({ fontSize: e.target.value })}
-                  className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                  className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
                 >
                   <option value="">Default</option>
                   {SIZES.map((s) => (
@@ -161,7 +161,7 @@ export function DesignSidebar({
                 <select
                   value={currentDesign.fontWeight || ""}
                   onChange={(e) => handleUpdate({ fontWeight: e.target.value })}
-                  className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                  className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
                 >
                   <option value="">Default</option>
                   {WEIGHTS.map((w) => (
@@ -178,7 +178,7 @@ export function DesignSidebar({
                 <label className="text-xs text-gray-600 dark:text-gray-400 block mb-1">
                   Style & Formatting
                 </label>
-                <div className="flex bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden">
+                <div className="flex bg-gray-50 dark:bg-neutral-900 border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden">
                   {[
                     {
                       key: "fontWeight",
@@ -231,7 +231,7 @@ export function DesignSidebar({
                 <label className="text-xs text-gray-600 dark:text-gray-400 block mb-1">
                   Alignment
                 </label>
-                <div className="flex bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden">
+                <div className="flex bg-gray-50 dark:bg-neutral-900 border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden">
                   {[
                     { align: "left", icon: AlignLeft, title: "Align Left" },
                     {
@@ -283,7 +283,7 @@ export function DesignSidebar({
                   value={currentDesign.color || ""}
                   onChange={(e) => handleUpdate({ color: e.target.value })}
                   placeholder="#000000"
-                  className="flex-1 text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800 uppercase"
+                  className="flex-1 text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900 uppercase"
                 />
               </div>
             </div>
@@ -308,7 +308,7 @@ export function DesignSidebar({
                     handleUpdate({ backgroundColor: e.target.value })
                   }
                   placeholder="transparent"
-                  className="flex-1 text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800 uppercase"
+                  className="flex-1 text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900 uppercase"
                 />
               </div>
             </div>
@@ -331,7 +331,7 @@ export function DesignSidebar({
                 onChange={(e) =>
                   handleUpdate({ x: parseInt(e.target.value) || 0 })
                 }
-                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
               />
             </div>
             <div>
@@ -344,7 +344,7 @@ export function DesignSidebar({
                 onChange={(e) =>
                   handleUpdate({ y: parseInt(e.target.value) || 0 })
                 }
-                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
               />
             </div>
 
@@ -357,7 +357,7 @@ export function DesignSidebar({
                 placeholder="0px 0px"
                 value={currentDesign.margin || ""}
                 onChange={(e) => handleUpdate({ margin: e.target.value })}
-                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
               />
             </div>
             <div>
@@ -369,7 +369,7 @@ export function DesignSidebar({
                 placeholder="0px 0px"
                 value={currentDesign.padding || ""}
                 onChange={(e) => handleUpdate({ padding: e.target.value })}
-                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
               />
             </div>
           </div>
@@ -390,7 +390,7 @@ export function DesignSidebar({
                 placeholder="none"
                 value={currentDesign.border || ""}
                 onChange={(e) => handleUpdate({ border: e.target.value })}
-                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
               />
             </div>
             <div className="col-span-2">
@@ -400,7 +400,7 @@ export function DesignSidebar({
               <select
                 value={currentDesign.borderRadius || ""}
                 onChange={(e) => handleUpdate({ borderRadius: e.target.value })}
-                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
               >
                 <option value="">Square (0px)</option>
                 <option value="4px">Small (4px)</option>
@@ -451,7 +451,7 @@ export function DesignSidebar({
               <select
                 value={currentDesign.boxShadow || ""}
                 onChange={(e) => handleUpdate({ boxShadow: e.target.value })}
-                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-gray-800"
+                className="w-full text-sm border border-gray-300 dark:border-gray-700 rounded-md p-1.5 bg-gray-50 dark:bg-neutral-900"
               >
                 <option value="">None</option>
                 <option value="0 1px 2px 0 rgb(0 0 0 / 0.05)">Small</option>
@@ -478,7 +478,7 @@ export function DesignSidebar({
                       : "hidden",
                 })
               }
-              className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors text-sm font-medium border ${currentDesign.visibility === "hidden" ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"}`}
+              className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors text-sm font-medium border ${currentDesign.visibility === "hidden" ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-neutral-900 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"}`}
               title={
                 currentDesign.visibility === "hidden"
                   ? "Show Element"
