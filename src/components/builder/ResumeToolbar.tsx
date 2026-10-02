@@ -161,7 +161,7 @@ export function ResumeToolbar({
       if (!element) return;
 
       const filename = `${resume.data.personalInfo.fullName?.replace(/\s+/g, "_") || "Resume"}.pdf`;
-      await generateResumePdf(element, filename);
+      await generateResumePdf(element, filename, resume.data);
     } catch (error) {
       console.error("Failed to generate PDF", error);
       useToastStore
